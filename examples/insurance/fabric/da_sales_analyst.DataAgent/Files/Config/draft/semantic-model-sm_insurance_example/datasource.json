@@ -1,0 +1,109 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "00000000-0000-0000-0000-0000000000a3",
+  "workspaceId": "00000000-0000-0000-0000-0000000000a0",
+  "displayName": "sm_insurance_example",
+  "type": "semantic_model",
+  "userDescription": "Direct Lake semantic model over gold.",
+  "dataSourceInstructions": "Use for totals, counts and trends. Prefer the measures NewBusinessCount and AnnualPremiumTotal over summing columns yourself.",
+  "elements": [
+    {
+      "display_name": "DimAgent",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per agent version (SCD type 2). Grain = Agent_BK, StartDate. Also known as: Broker, Intermediary, Adviser.",
+      "children": [
+        {
+          "display_name": "Agent_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Agent code from the policy admin system."
+        },
+        {
+          "display_name": "BranchCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(10)",
+          "is_selected": true,
+          "description": "Branch the agent belongs to."
+        },
+        {
+          "display_name": "IsActive",
+          "type": "semantic_model.column",
+          "data_type": "bit",
+          "is_selected": true,
+          "description": "1 when the agent may write new business."
+        },
+        {
+          "display_name": "StartDate",
+          "type": "semantic_model.column",
+          "data_type": "date",
+          "is_selected": true,
+          "description": "First date this version is valid."
+        },
+        {
+          "display_name": "EndDate",
+          "type": "semantic_model.column",
+          "data_type": "date",
+          "is_selected": true,
+          "description": "Last date this version is valid (9999-12-31 for the current version)."
+        },
+        {
+          "display_name": "IsCurrent",
+          "type": "semantic_model.column",
+          "data_type": "bit",
+          "is_selected": true,
+          "description": "1 for the current version."
+        }
+      ]
+    },
+    {
+      "display_name": "FactNewBusiness",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per issued new business policy. Grain = Policy_BK. Also known as: New business, Policies written, Sales.",
+      "children": [
+        {
+          "display_name": "Policy_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Policy number."
+        },
+        {
+          "display_name": "ProductCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Product code. Also known as: Product, Plan."
+        },
+        {
+          "display_name": "AnnualPremiumAmount",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,2)",
+          "is_selected": true,
+          "description": "Annualised premium in policy currency. Also known as: Premium, Annual premium."
+        },
+        {
+          "display_name": "IssueDate",
+          "type": "semantic_model.column",
+          "data_type": "date",
+          "is_selected": true,
+          "description": "Date the policy was issued."
+        },
+        {
+          "display_name": "NewBusinessCount",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Number of new business policies issued. Also known as: Policies sold, Policy count."
+        },
+        {
+          "display_name": "AnnualPremiumTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total annualised premium of new business. Also known as: Total premium, New business premium."
+        }
+      ]
+    }
+  ]
+}

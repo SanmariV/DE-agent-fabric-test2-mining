@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_silver_policy_admin_policy",
+    "description": "Silver load of policy_admin.Policy."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e4f48a5b-df0e-506f-8343-e655d890fe26"
+  }
+}

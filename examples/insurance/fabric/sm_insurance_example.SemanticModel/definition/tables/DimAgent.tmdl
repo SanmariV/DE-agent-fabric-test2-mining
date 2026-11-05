@@ -1,0 +1,64 @@
+/// One row per agent version (SCD type 2). Grain = Agent_BK, StartDate. Also known as: Broker, Intermediary, Adviser. Guidance: Pick the version whose StartDate and EndDate cover the date you are asking about. For today, filter IsCurrent = 1.
+table DimAgent
+	lineageTag: 6e63ce7d-61d4-5f78-97d5-913efc812888
+	sourceLineageTag: [distribution].[DimAgent]
+
+	/// Surrogate key of DimAgent.
+	column DimAgent_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 47d08b29-c183-5670-aa28-6fe7ceab93a8
+		summarizeBy: none
+		sourceColumn: DimAgent_SK
+
+	/// Agent code from the policy admin system.
+	column Agent_BK
+		dataType: string
+		lineageTag: 6c80fccb-449e-5250-bd0d-582e9112a4bd
+		summarizeBy: none
+		sourceColumn: Agent_BK
+
+	/// Branch the agent belongs to.
+	column BranchCode
+		dataType: string
+		lineageTag: 8b882b7f-212d-5e11-8558-73a1b74b00a4
+		summarizeBy: none
+		sourceColumn: BranchCode
+
+	/// 1 when the agent may write new business.
+	column IsActive
+		dataType: boolean
+		lineageTag: f46bcfa8-e2f4-5c66-8247-c5f36fb4a4f5
+		summarizeBy: none
+		sourceColumn: IsActive
+
+	/// First date this version is valid.
+	column StartDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9f7e10a7-1656-5396-89e2-b953824b20f8
+		summarizeBy: none
+		sourceColumn: StartDate
+
+	/// Last date this version is valid (9999-12-31 for the current version).
+	column EndDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a14ede3e-04dd-5255-9ff1-02e4e97cd220
+		summarizeBy: none
+		sourceColumn: EndDate
+
+	/// 1 for the current version.
+	column IsCurrent
+		dataType: boolean
+		lineageTag: 8c0d64ec-0eb8-5279-8393-f1592a52bc12
+		summarizeBy: none
+		sourceColumn: IsCurrent
+
+	partition DimAgent = entity
+		mode: directLake
+		source
+			entityName: DimAgent
+			schemaName: distribution
+			expressionSource: DatabaseQuery

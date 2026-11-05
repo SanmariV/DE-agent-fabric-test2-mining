@@ -1,0 +1,6 @@
+# For scripts/build_information_matrix.py
+openpyxl>=3.1
+pyyaml>=6.0
+# profile step only (same as the fde toolkit)
+pyodbc>=5.0
+azure-identity>=1.17

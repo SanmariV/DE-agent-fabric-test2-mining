@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "00000000-0000-0000-0000-0000000000a2",
+  "workspaceId": "00000000-0000-0000-0000-0000000000a0",
+  "displayName": "wh_gold",
+  "type": "data_warehouse",
+  "userDescription": "Gold layer of the data warehouse.",
+  "dataSourceInstructions": "Use for row-level questions that the semantic model measures cannot answer.",
+  "elements": [
+    {
+      "display_name": "distribution",
+      "type": "warehouse_tables.schema",
+      "is_selected": false,
+      "children": [
+        {
+          "display_name": "DimAgent",
+          "type": "warehouse_tables.table",
+          "is_selected": false,
+          "description": "One row per agent version (SCD type 2). Grain = Agent_BK, StartDate. Also known as: Broker, Intermediary, Adviser.",
+          "children": [
+            {
+              "display_name": "DimAgent_SK",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "is_selected": true,
+              "description": "Surrogate key of DimAgent."
+            },
+            {
+              "display_name": "Agent_BK",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar(20)",
+              "is_selected": true,
+              "description": "Agent code from the policy admin system."
+            },
+            {
+              "display_name": "BranchCode",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar(10)",
+              "is_selected": true,
+              "description": "Branch the agent belongs to."
+            },
+            {
+              "display_name": "IsActive",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "is_selected": true,
+              "description": "1 when the agent may write new business."
+            },
+            {
+              "display_name": "StartDate",
+              "type": "warehouse_tables.column",
+              "data_type": "date",
+              "is_selected": true,
+              "description": "First date this version is valid."
+            },
+            {
+              "display_name": "EndDate",
+              "type": "warehouse_tables.column",
+              "data_type": "date",
+              "is_selected": true,
+              "description": "Last date this version is valid (9999-12-31 for the current version)."
+            },
+            {
+              "display_name": "IsCurrent",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "is_selected": true,
+              "description": "1 for the current version."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "display_name": "sales",
+      "type": "warehouse_tables.schema",
+      "is_selected": true,
+      "children": [
+        {
+          "display_name": "FactNewBusiness",
+          "type": "warehouse_tables.table",
+          "is_selected": true,
+          "description": "One row per issued new business policy. Grain = Policy_BK. Also known as: New business, Policies written, Sales.",
+          "children": [
+            {
+              "display_name": "FactNewBusiness_SK",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "is_selected": true,
+              "description": "Surrogate key of FactNewBusiness."
+            },
+            {
+              "display_name": "Policy_BK",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar(20)",
+              "is_selected": true,
+              "description": "Policy number."
+            },
+            {
+              "display_name": "DimAgent_SK",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "is_selected": true,
+              "description": "Writing agent version valid on the issue date (-1 unknown)."
+            },
+            {
+              "display_name": "ProductCode",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar(20)",
+              "is_selected": true,
+              "description": "Product code. Also known as: Product, Plan."
+            },
+            {
+              "display_name": "AnnualPremiumAmount",
+              "type": "warehouse_tables.column",
+              "data_type": "decimal(18,2)",
+              "is_selected": true,
+              "description": "Annualised premium in policy currency. Also known as: Premium, Annual premium."
+            },
+            {
+              "display_name": "IssueDate",
+              "type": "warehouse_tables.column",
+              "data_type": "date",
+              "is_selected": true,
+              "description": "Date the policy was issued."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

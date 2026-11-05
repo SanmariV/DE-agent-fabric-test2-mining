@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_ops_run_silver",
+    "description": "Runs every silver notebook, then refreshes the SQL endpoint."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6026bb37-0a7b-5e8f-a510-f57b49b1f40b"
+  }
+}

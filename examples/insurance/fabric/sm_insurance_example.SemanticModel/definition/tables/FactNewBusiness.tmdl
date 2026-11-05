@@ -1,0 +1,69 @@
+/// One row per issued new business policy. Grain = Policy_BK. Also known as: New business, Policies written, Sales. Guidance: Use for how many policies were sold and how much premium they bring in. A policy counts once, on its issue date. Cancelled policies are not in this table.
+table FactNewBusiness
+	lineageTag: 594f2d37-6402-5646-8cb2-de3d301e83b0
+	sourceLineageTag: [sales].[FactNewBusiness]
+
+	/// Number of new business policies issued. Also known as: Policies sold, Policy count.
+	measure NewBusinessCount = COUNT('FactNewBusiness'[Policy_BK])
+		formatString: #,0
+		lineageTag: 8795e6f4-eff3-5a69-871a-86ed6fcfdcdb
+
+	/// Total annualised premium of new business. Also known as: Total premium, New business premium.
+	measure AnnualPremiumTotal = SUM('FactNewBusiness'[AnnualPremiumAmount])
+		formatString: #,0.00
+		lineageTag: c049c939-9674-51b8-8440-06d7ce664477
+
+	/// Surrogate key of FactNewBusiness.
+	column FactNewBusiness_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 98604b22-9f5c-5039-86cd-2ac1db0048c4
+		summarizeBy: none
+		sourceColumn: FactNewBusiness_SK
+
+	/// Policy number.
+	column Policy_BK
+		dataType: string
+		lineageTag: 36c236de-fa40-5823-b384-b8dab6981078
+		summarizeBy: none
+		sourceColumn: Policy_BK
+
+	/// Writing agent version valid on the issue date (-1 unknown).
+	column DimAgent_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 3e8f9e9e-cdb4-530b-8a23-61675a919579
+		summarizeBy: none
+		sourceColumn: DimAgent_SK
+
+	/// Product code. Also known as: Product, Plan.
+	column ProductCode
+		dataType: string
+		lineageTag: cfe65766-8a6b-5294-a170-74ebeaa66abb
+		summarizeBy: none
+		sourceColumn: ProductCode
+
+	/// Annualised premium in policy currency. Also known as: Premium, Annual premium.
+	column AnnualPremiumAmount
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 47253f48-3c50-50dd-b99c-9d5766b2f8e0
+		summarizeBy: none
+		sourceColumn: AnnualPremiumAmount
+
+	/// Date the policy was issued.
+	column IssueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 14e12e0c-8764-5b0b-96d8-80a6288fd3c1
+		summarizeBy: none
+		sourceColumn: IssueDate
+
+	partition FactNewBusiness = entity
+		mode: directLake
+		source
+			entityName: FactNewBusiness
+			schemaName: sales
+			expressionSource: DatabaseQuery

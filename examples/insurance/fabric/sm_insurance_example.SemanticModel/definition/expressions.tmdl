@@ -1,0 +1,6 @@
+expression DatabaseQuery =
+		let
+		    database = Sql.Database("SQL_ENDPOINT_PLACEHOLDER", "00000000-0000-0000-0000-0000000000a2")
+		in
+		    database
+	lineageTag: 8c64a387-0a09-5abc-b3c6-86fc150384ad

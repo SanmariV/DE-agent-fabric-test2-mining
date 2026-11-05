@@ -1,0 +1,3 @@
+relationship 5304b236-32ba-51d7-8280-ffeec9f97797
+	fromColumn: FactNewBusiness.DimAgent_SK
+	toColumn: DimAgent.DimAgent_SK

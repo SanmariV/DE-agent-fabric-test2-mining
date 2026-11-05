@@ -1,0 +1,43 @@
+description: Answers new business sales questions for the distribution team.
+instructions: |
+  You answer questions about new business policies: how many were sold, how
+  much premium they bring in, and how that splits by product and over time.
+  Answer only from the data. If the data cannot answer, say so; never guess a
+  number. Premium is in policy currency, not converted. Say which date range
+  an answer covers. You have no access to personal data about agents or
+  policyholders; do not try to find it.
+sources:
+  - semantic_model: true
+    instructions: Use for totals, counts and trends. Prefer the measures
+      NewBusinessCount and AnnualPremiumTotal over summing columns yourself.
+  - warehouse: true
+    tables: [sales.FactNewBusiness]
+    instructions: Use for row-level questions that the semantic model measures
+      cannot answer.
+examples:
+  - question: How many new business policies were issued per product?
+    query: |
+      select
+          FactNewBusiness.ProductCode,
+          count(FactNewBusiness.Policy_BK) as PolicyCount
+      from {{ ref('sales.FactNewBusiness') }} as FactNewBusiness
+      group by FactNewBusiness.ProductCode
+    expect_columns: [ProductCode, PolicyCount]
+  - question: What is the total annualised premium by month of issue?
+    query: |
+      select
+          datefromparts(year(FactNewBusiness.IssueDate),
+              month(FactNewBusiness.IssueDate), 1) as IssueMonth,
+          sum(FactNewBusiness.AnnualPremiumAmount) as AnnualPremiumTotal
+      from {{ ref('sales.FactNewBusiness') }} as FactNewBusiness
+      group by datefromparts(year(FactNewBusiness.IssueDate),
+          month(FactNewBusiness.IssueDate), 1)
+    expect_columns: [IssueMonth, AnnualPremiumTotal]
+  - question: What is the average annual premium per policy for each product?
+    query: |
+      select
+          FactNewBusiness.ProductCode,
+          avg(FactNewBusiness.AnnualPremiumAmount) as AveragePremium
+      from {{ ref('sales.FactNewBusiness') }} as FactNewBusiness
+      group by FactNewBusiness.ProductCode
+    expect_columns: [ProductCode, AveragePremium]

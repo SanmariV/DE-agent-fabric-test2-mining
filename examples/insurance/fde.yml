@@ -1,0 +1,36 @@
+# Project settings for the fde toolkit (python -m fde).
+# No hosts, ids or secrets here: each target names the environment
+# variables that hold them.
+
+project: insurance_example
+
+items:                              # item names, the same in every workspace
+  bronze_lakehouse: lh_bronze       # landed by Fabric pipelines (read-only)
+  silver_lakehouse: lh_silver       # schema-enabled Lakehouse
+  gold_warehouse: wh_gold           # Fabric Data Warehouse
+
+silver:
+  concurrency: 4                    # silver notebooks run at the same time
+
+ai:                                 # semantic model and Data Agents
+  semantic_model: sm_insurance_example   # default: sm_<project>
+  pii: exclude                      # exclude: PII columns never reach AI items
+
+defaults:
+  freshness:                        # written into new source specs
+    loaded_at_column: _ingested_at
+    warn_after_hours: 26
+    error_after_hours: 48
+
+targets:
+  dev:
+    sql_endpoint_env: FABRIC_DEV_SQL_ENDPOINT     # workspace SQL connection host
+    workspace_id_env: FABRIC_DEV_WORKSPACE_ID
+  test:
+    sql_endpoint_env: FABRIC_TEST_SQL_ENDPOINT
+    workspace_id_env: FABRIC_TEST_WORKSPACE_ID
+    protected: true                 # only CI writes (FDE_ALLOW_PROTECTED=1)
+  prod:
+    sql_endpoint_env: FABRIC_PROD_SQL_ENDPOINT
+    workspace_id_env: FABRIC_PROD_WORKSPACE_ID
+    protected: true

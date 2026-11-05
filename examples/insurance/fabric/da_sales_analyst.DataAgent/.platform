@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataAgent",
+    "displayName": "da_sales_analyst",
+    "description": "Answers new business sales questions for the distribution team."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "376ef1d7-30a7-56b1-ae2b-ea8b6548b64b"
+  }
+}

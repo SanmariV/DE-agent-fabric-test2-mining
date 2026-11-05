@@ -1,0 +1,26 @@
+source: policy_admin
+description: Policy administration system tables, landed daily by Fabric pipelines.
+freshness:
+  loaded_at_column: _ingested_at
+  warn_after_hours: 26
+  error_after_hours: 48
+tables:
+  - name: policy
+    description: One row per policy version as held in the admin system.
+    columns:
+      - {name: policy_no, data_type: varchar(8000)}
+      - {name: agent_code, data_type: varchar(8000)}
+      - {name: product_code, data_type: varchar(8000)}
+      - {name: policy_status, data_type: varchar(8000)}
+      - {name: annual_prem, data_type: decimal(18,2)}
+      - {name: application_dt, data_type: date}
+      - {name: issue_dt, data_type: date}
+      - {name: _ingested_at, data_type: datetime2(6)}
+  - name: agent
+    description: One row per agent version as held in the admin system.
+    columns:
+      - {name: agent_code, data_type: varchar(8000)}
+      - {name: agent_name, data_type: varchar(8000)}
+      - {name: branch_code, data_type: varchar(8000)}
+      - {name: active_ind, data_type: varchar(8000)}
+      - {name: _ingested_at, data_type: datetime2(6)}

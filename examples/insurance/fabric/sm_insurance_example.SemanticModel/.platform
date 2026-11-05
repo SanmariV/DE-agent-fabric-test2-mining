@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "sm_insurance_example",
+    "description": "Direct Lake semantic model over the gold Warehouse."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6b80a1b1-07a7-563b-8f66-9d4001f8cf59"
+  }
+}

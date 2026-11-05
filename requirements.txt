@@ -1,0 +1,10 @@
+# Everything the kit needs on a developer machine or CI agent.
+# Pin exact versions per engagement once the Sprint 0 spike has passed.
+-e .
+pyyaml>=6.0
+pyodbc>=5.0              # T-SQL to the Warehouse (needs ODBC Driver 18)
+azure-identity>=1.17     # sign-in: service principal, az login or browser
+fabric-cicd>=0.1.20      # publishes notebooks to a workspace [Spike: pin]
+openpyxl>=3.1            # Information Matrix
+pytest>=8.0
+sqlglot>=25.0            # tests parse the rendered T-SQL
