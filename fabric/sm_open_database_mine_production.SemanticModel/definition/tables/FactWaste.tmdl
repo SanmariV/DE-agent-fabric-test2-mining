@@ -1,0 +1,132 @@
+/// One row per facility, year and waste stream. Grain = WasteStream_BK. Most rows have no material, commodity or source, so those keys are -1.
+table FactWaste
+	lineageTag: 110cdac9-3111-5071-8ee8-7f06fd44c5e7
+	sourceLineageTag: [production].[FactWaste]
+
+	/// Total mass of waste, in tonnes.
+	measure WasteTonnesTotal = SUM('FactWaste'[ValueTonnes])
+		formatString: #,0.00
+		lineageTag: d4666519-afaf-590d-8ab0-84fbfb629cf0
+
+	/// Total material extracted (ore plus waste), in tonnes.
+	measure TotalMaterialTonnesTotal = SUM('FactWaste'[TotalMaterialTonnes])
+		formatString: #,0.00
+		lineageTag: 3800640f-f3d9-5290-b2d2-1daf06d244c7
+
+	/// Simple average stripping ratio over the records, not weighted by tonnes.
+	measure StrippingRatioAverage = AVERAGE('FactWaste'[StrippingRatio])
+		formatString: #,0.00
+		lineageTag: 7395e52d-5ad4-5788-bcaf-2d25c9b95134
+
+	/// Surrogate key of FactWaste.
+	column FactWaste_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 15702fd9-6fb9-580e-a59b-23baa5162f15
+		summarizeBy: none
+		sourceColumn: FactWaste_SK
+
+	/// Unique ID of the waste record from the source.
+	column WasteStream_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: 27823e65-104a-5776-8673-78fe5676f027
+		summarizeBy: none
+		sourceColumn: WasteStream_BK
+
+	/// Facility producing the waste (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f787d553-9834-5fa2-9724-5437a986b06d
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Material to which the waste stream relates (-1 unknown or not stated).
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 96ded98e-1168-5602-9b25-a27f30092f9c
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// Commodity to which the waste stream relates (-1 unknown or not stated).
+	column CommodityDimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9f3d02ce-56f7-5175-8a20-851c44d772a6
+		summarizeBy: none
+		sourceColumn: CommodityDimMaterial_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: e07b6b13-4771-57af-b542-ab1be63eaa08
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Mining method of the material to which the waste relates. Values in the data are SURFACE and UNDERGROUND. Null when not stated.
+	column MiningMethodCode
+		dataType: string
+		lineageTag: fe6cebf8-4a63-500b-b739-7120cc8d477d
+		summarizeBy: none
+		sourceColumn: MiningMethodCode
+
+	/// Type of waste.
+	column WasteType
+		dataType: string
+		lineageTag: 5c1258ac-14db-5466-aa7d-c75dc9bba710
+		summarizeBy: none
+		sourceColumn: WasteType
+
+	/// Period in which the stream occurred; relates to the year in which the period ends.
+	column ReportingPeriod
+		dataType: string
+		lineageTag: 20599ab6-4911-5a5b-b278-2b28765ee0e8
+		summarizeBy: none
+		sourceColumn: ReportingPeriod
+
+	/// Year in which the reporting period ends.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: a6dedbad-30a8-553d-93aa-a55204edd318
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Mass of waste, in tonnes.
+	column ValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: c23ae6fc-746f-53e0-ba53-99453e324e76
+		summarizeBy: none
+		sourceColumn: ValueTonnes
+
+	/// Total material extracted of a mine, that is ore mined plus waste mined, in tonnes.
+	column TotalMaterialTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 6564f048-0257-5650-a0dd-6a718092316b
+		summarizeBy: none
+		sourceColumn: TotalMaterialTonnes
+
+	/// Ratio of how much overburden is removed for each unit of ore mined.
+	column StrippingRatio
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: a7ff971d-f05e-5a39-951c-0499e51489be
+		summarizeBy: none
+		sourceColumn: StrippingRatio
+
+	partition FactWaste = entity
+		mode: directLake
+		source
+			entityName: FactWaste
+			schemaName: production
+			expressionSource: DatabaseQuery

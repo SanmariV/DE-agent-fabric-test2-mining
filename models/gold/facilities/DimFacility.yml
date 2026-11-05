@@ -1,0 +1,88 @@
+description: >
+  One row per mine, processing facility or sub-site (including a few company
+  and region records, see FacilityType). Grain = Facility_BK. The source is a
+  single static snapshot, so attributes are overwritten, not versioned.
+scd_type: 1
+meta:
+  matrix:
+    business_question: Where
+    scd_type: 1
+columns:
+  - name: Facility_BK
+    data_type: varchar(20)
+    business_key: true
+    description: ID that uniquely identifies each mine, processing facility and sub-site.
+  - name: FacilityName
+    data_type: varchar(100)
+    description: Name of the facility.
+  - name: FacilityOtherNames
+    data_type: varchar(400)
+    description: Other names of the facility.
+  - name: SubSiteName
+    data_type: varchar(120)
+    description: Name of the sub-site.
+  - name: SubSiteOtherNames
+    data_type: varchar(200)
+    description: Other names of the sub-site.
+  - name: FacilityType
+    data_type: varchar(50)
+    description: >
+      Type of facility, for example Mine, Refinery, Smelter, or a comma
+      separated combination. Also holds Company, Region and Concentrator.
+  - name: PrimaryCommodity
+    data_type: varchar(50)
+    description: Primary commodity produced by a mine, determined by the economic value of the commodities produced.
+  - name: CommoditiesProducts
+    data_type: varchar(400)
+    description: Materials, commodities and products produced by this facility.
+  - name: FacilityEquipment
+    data_type: varchar(800)
+    description: Equipment present at this facility.
+  - name: ActivityStatus
+    data_type: varchar(50)
+    description: Activity status of the facility, lower-cased. Null when not stated.
+  - name: Country
+    data_type: varchar(60)
+    description: Country in which the facility or sub-site is located.
+  - name: GadmLevel0Code
+    data_type: varchar(10)
+    description: Key to map the facility to GADM regions (level 0).
+  - name: GadmLevel1Code
+    data_type: varchar(80)
+    description: Key to map the facility to GADM regions (level 1).
+  - name: GadmLevel2Code
+    data_type: varchar(200)
+    description: Key to map the facility to GADM regions (level 2).
+  - name: GadmLevel3Code
+    data_type: varchar(300)
+    description: Key to map the facility to GADM regions (level 3).
+  - name: GadmLevel4Code
+    data_type: varchar(400)
+    description: Key to map the facility to GADM regions (level 4).
+  - name: LocationGeometry
+    data_type: varchar(2000)
+    description: Geometry of the facility as text, of type POINT or MULTIPOINT, or empty.
+  - name: Comment
+    data_type: varchar(1000)
+    description: Free-text comment.
+  - name: SurfaceAreaSquareKilometers
+    data_type: decimal(18,4)
+    description: Surface area of the facility or sub-site, in square kilometers.
+  - name: ConcessionAreaSquareKilometers
+    data_type: decimal(18,4)
+    description: Concession area of the facility or sub-site, in square kilometers.
+  - name: ProductionStartYear
+    data_type: int
+    description: Year in which production at this facility started.
+    tests:
+      - accepted_range: {min: 1500, max: 2030}
+  - name: ProductionEndYear
+    data_type: int
+    description: Year in which production at this facility ended.
+    tests:
+      - accepted_range: {min: 1900, max: 2030}
+  - name: ActivityStatusYear
+    data_type: int
+    description: Year to which the activity status relates.
+tests:
+  - row_count_between: {min: 1, severity: warn}

@@ -1,0 +1,59 @@
+description: >
+  One row per facility, year and material with the reported reserves.
+  Grain = MaterialReserve_BK.
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: MaterialReserve_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the reserve record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility holding the reserves (-1 unknown).
+  - name: DimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Material of the reserves (-1 unknown).
+  - name: CommodityDimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Commodity contained in the reserves (-1 unknown or not stated).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: ReserveYear
+    data_type: int
+    description: Year to which the reserves relate.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: MineralValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of material reserves, in tonnes.
+  - name: CommodityValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the commodity contained in the material reserves, in tonnes.
+  - name: GradePartsPerMillion
+    data_type: decimal(18,4)
+    description: Grade of the material reserves relating to the stated commodity, in parts per million.
+measures:
+  - name: MineralReserveTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(MineralValueTonnes)
+    description: Total mass of material reserves, in tonnes.
+    format: "#,0.00"
+  - name: CommodityReserveTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(CommodityValueTonnes)
+    description: Total mass of commodity contained in the reserves, in tonnes.
+    format: "#,0.00"
+  - name: ReserveGradePartsPerMillionAverage
+    meta: {matrix: {unit: Parts per million}}
+    expression: avg(GradePartsPerMillion)
+    description: Simple average grade in parts per million over the records, not weighted by tonnes.
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

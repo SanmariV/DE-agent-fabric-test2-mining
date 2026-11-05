@@ -22,3 +22,5 @@ __pycache__/
 *.docx
 *.pdf
 !docs/information_matrix_template.xlsx
+*.csv
+*.pdf

@@ -1,0 +1,44 @@
+description: >
+  One row per facility, year and material with the stated output or input
+  capacity in tonnes per year. Grain = FacilityCapacity_BK (source row id).
+source: {source: dbo, table: capacity}
+load: {mode: full}
+columns:
+  - name: FacilityCapacity_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility the capacity belongs to; key of Facility.
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(material))
+    description: Material whose input capacity is stated; key of Material.
+  - name: CommodityMaterial_BK
+    data_type: string
+    expression: upper(trim(commodity))
+    description: Commodity whose output capacity is stated, when available; key of Material.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: CapacityTonnesPerYear
+    data_type: decimal(18,4)
+    expression: cast(value_tpa as decimal(18,4))
+    description: >
+      Mass of input or output capacity, in tonnes per year. Output capacity of
+      the commodity when a commodity is given, otherwise input capacity of the
+      material.
+  - name: ReportingYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year to which the capacity relates.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

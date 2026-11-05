@@ -1,0 +1,111 @@
+relationship 753b6cc2-a10e-5a99-afc6-f4cdb00e5c59
+	fromColumn: FactFacilityCapacity.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship eb2b6928-983e-5684-bf84-55b98d8c8ffe
+	fromColumn: FactFacilityCapacity.DimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+
+relationship 80ff9de1-7d33-511a-bd23-24d4e6afbded
+	fromColumn: FactFacilityCapacity.CommodityDimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+	isActive: false
+
+relationship 5bee750d-0d52-5316-a1b6-0c512fcfebfb
+	fromColumn: FactFacilityCapacity.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship 891fd853-b48c-59ca-a239-464032082805
+	fromColumn: FactFacilityOwnership.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship 6c20cb69-8d33-5db3-bd29-ed27551fcb91
+	fromColumn: FactFacilityOwnership.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship 78ffc926-5dc7-527e-9cd9-e1a44144edb2
+	fromColumn: FactCommodityOutput.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship d78c4bcd-e5ef-5433-b604-f1523ff09a9b
+	fromColumn: FactCommodityOutput.DimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+
+relationship edd89d13-7a22-58a7-83af-566ed0844bc9
+	fromColumn: FactCommodityOutput.CommodityDimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+	isActive: false
+
+relationship e92e44aa-a9dd-5c8b-a6ed-35d587761775
+	fromColumn: FactCommodityOutput.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship 8ceb820c-b560-58d9-bf0e-e4642169e6b8
+	fromColumn: FactFacilityProcessing.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship 76aa92a2-77ae-5ddb-9c9e-c962502af6e8
+	fromColumn: FactFacilityProcessing.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship a8612f8f-e651-5930-b5d2-7c1f4e906804
+	fromColumn: FactFacilityYearProduction.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship d9508030-5ef2-55fc-a2a5-76a6d63bc31c
+	fromColumn: FactMaterialStream.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship 39f73975-cf05-5e01-ab82-8a7c88513465
+	fromColumn: FactMaterialStream.DimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+
+relationship 27962944-19ae-5f8b-88c9-be6a7a4eba2e
+	fromColumn: FactMaterialStream.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship 1e9c048a-a910-5ee5-b9c0-9ccf72de6679
+	fromColumn: FactReserve.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship 28af73bb-dfe7-5a26-b6d0-509b37ca5350
+	fromColumn: FactReserve.DimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+
+relationship 813b5830-0ad2-573b-b2de-1efee3f1bc56
+	fromColumn: FactReserve.CommodityDimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+	isActive: false
+
+relationship 7709fe95-cff9-51f8-bf1c-fb4794f36caa
+	fromColumn: FactReserve.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship 2a7b38dc-88ca-5f0f-959d-1c33395c7e29
+	fromColumn: FactTransport.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship e84e0a49-1001-5e50-a6d3-370108b24072
+	fromColumn: FactTransport.DimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+
+relationship 2117429e-d826-5aaf-96e0-0cf72a7b1732
+	fromColumn: FactTransport.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK
+
+relationship 60de3ab2-8950-56fa-8da3-b273a3e178aa
+	fromColumn: FactWaste.DimFacility_SK
+	toColumn: DimFacility.DimFacility_SK
+
+relationship b842dced-caf5-5755-a0a2-69a403a27616
+	fromColumn: FactWaste.DimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+
+relationship 0543589a-4b64-5e2a-be5c-2a5217d1ee74
+	fromColumn: FactWaste.CommodityDimMaterial_SK
+	toColumn: DimMaterial.DimMaterial_SK
+	isActive: false
+
+relationship 591885ce-ba3c-5b48-8a53-db81f0865973
+	fromColumn: FactWaste.DimDataSource_SK
+	toColumn: DimDataSource.DimDataSource_SK

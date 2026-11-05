@@ -1,0 +1,93 @@
+description: >
+  Answers questions about mines and processing facilities, their production,
+  waste, transport, reserves, capacity and ownership, from the Open Database
+  of Mine Production.
+instructions: |
+  You answer questions about mine and processing facilities from the Open
+  Database of Mine Production. All quantities are in tonnes unless the column
+  says otherwise (grade is in parts per million, capacity in tonnes per year).
+  The data is a static snapshot with years up to 2021 and is not refreshed.
+  State the years covered in every answer.
+  Tonnes of different stream types (ore mined, ore processed, concentrate,
+  coal) overlap: never add them together, always report by stream type.
+  Prefer the semantic model measures over summing columns yourself.
+  Never guess a number. If the data does not hold the answer, say so.
+  Rows with no matching material, source or commodity are linked to the
+  unknown member (key -1); say so when it affects an answer.
+sources:
+  - semantic_model: true
+    instructions: >
+      Use for totals, counts and trends. Prefer the measures over summing
+      columns yourself, and report production by stream type and year.
+  - warehouse: true
+    tables:
+      - facilities.DimFacility
+      - facilities.DimDataSource
+      - production.DimMaterial
+      - facilities.FactFacilityCapacity
+      - facilities.FactFacilityOwnership
+      - production.FactMaterialStream
+      - production.FactCommodityOutput
+      - production.FactFacilityYearProduction
+      - production.FactFacilityProcessing
+      - production.FactWaste
+      - production.FactTransport
+      - production.FactReserve
+    instructions: Use for row-level detail, such as owners of a facility, when the measures cannot answer.
+examples:
+  - question: How many tonnes of ore were mined per year?
+    query: |
+      select FactMaterialStream.ReportingYear,
+          sum(FactMaterialStream.ValueTonnes) as OreMinedTonnes
+      from {{ ref('production.FactMaterialStream') }} as FactMaterialStream
+      where FactMaterialStream.StreamTypeCode = 'ORE MINED'
+      group by FactMaterialStream.ReportingYear
+    expect_columns: [ReportingYear, OreMinedTonnes]
+  - question: Which countries have the most facilities?
+    query: |
+      select top 10 DimFacility.Country,
+          count(DimFacility.Facility_BK) as FacilityCount
+      from {{ ref('facilities.DimFacility') }} as DimFacility
+      where DimFacility.DimFacility_SK <> -1
+      group by DimFacility.Country
+      order by count(DimFacility.Facility_BK) desc
+    expect_columns: [Country, FacilityCount]
+  - question: What was the total waste per mining method in the latest year?
+    query: |
+      select FactWaste.MiningMethodCode,
+          FactWaste.ReportingYear,
+          sum(FactWaste.ValueTonnes) as WasteTonnes
+      from {{ ref('production.FactWaste') }} as FactWaste
+      where FactWaste.ReportingYear = (
+          select max(LatestWaste.ReportingYear)
+          from {{ ref('production.FactWaste') }} as LatestWaste
+      )
+      group by FactWaste.MiningMethodCode, FactWaste.ReportingYear
+    expect_columns: [MiningMethodCode, ReportingYear, WasteTonnes]
+  - question: How many tonnes were transported by each mode of transport?
+    query: |
+      select FactTransport.TransportBy,
+          sum(FactTransport.ValueTonnes) as TransportTonnes
+      from {{ ref('production.FactTransport') }} as FactTransport
+      group by FactTransport.TransportBy
+    expect_columns: [TransportBy, TransportTonnes]
+  - question: Which materials have the largest reserves?
+    query: |
+      select top 10 DimMaterial.MaterialName,
+          sum(FactReserve.MineralValueTonnes) as ReserveTonnes
+      from {{ ref('production.FactReserve') }} as FactReserve
+      inner join {{ ref('production.DimMaterial') }} as DimMaterial
+          on DimMaterial.DimMaterial_SK = FactReserve.DimMaterial_SK
+      group by DimMaterial.MaterialName
+      order by sum(FactReserve.MineralValueTonnes) desc
+    expect_columns: [MaterialName, ReserveTonnes]
+  - question: Who owns and operates each facility?
+    query: |
+      select top 20 DimFacility.FacilityName,
+          FactFacilityOwnership.OwnershipYear,
+          FactFacilityOwnership.Owners,
+          FactFacilityOwnership.Operators
+      from {{ ref('facilities.FactFacilityOwnership') }} as FactFacilityOwnership
+      inner join {{ ref('facilities.DimFacility') }} as DimFacility
+          on DimFacility.DimFacility_SK = FactFacilityOwnership.DimFacility_SK
+    expect_columns: [FacilityName, OwnershipYear, Owners, Operators]

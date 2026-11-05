@@ -1,0 +1,186 @@
+/// One row per mine, processing facility or sub-site (including a few company and region records, see FacilityType). Grain = Facility_BK. The source is a single static snapshot, so attributes are overwritten, not versioned.
+table DimFacility
+	lineageTag: 021b2b45-d106-5bf5-aa42-2ef44c416b10
+	sourceLineageTag: [facilities].[DimFacility]
+
+	/// Surrogate key of DimFacility.
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 06704e91-e242-5a24-b642-58258579ee7a
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// ID that uniquely identifies each mine, processing facility and sub-site.
+	column Facility_BK
+		dataType: string
+		lineageTag: 6d54304c-69d6-56c8-a2b3-b8d52da50190
+		summarizeBy: none
+		sourceColumn: Facility_BK
+
+	/// Name of the facility.
+	column FacilityName
+		dataType: string
+		lineageTag: 12c16223-087d-50e4-90f2-a6566e1eb8a4
+		summarizeBy: none
+		sourceColumn: FacilityName
+
+	/// Other names of the facility.
+	column FacilityOtherNames
+		dataType: string
+		lineageTag: 8afac010-ea72-50f9-9a4b-df22aa6ad09d
+		summarizeBy: none
+		sourceColumn: FacilityOtherNames
+
+	/// Name of the sub-site.
+	column SubSiteName
+		dataType: string
+		lineageTag: 5c217ee7-44aa-58c8-b8f7-cc31544407ff
+		summarizeBy: none
+		sourceColumn: SubSiteName
+
+	/// Other names of the sub-site.
+	column SubSiteOtherNames
+		dataType: string
+		lineageTag: 91f77915-176b-5771-8e55-60ac4af60912
+		summarizeBy: none
+		sourceColumn: SubSiteOtherNames
+
+	/// Type of facility, for example Mine, Refinery, Smelter, or a comma separated combination. Also holds Company, Region and Concentrator.
+	column FacilityType
+		dataType: string
+		lineageTag: 706cd485-e1ba-522e-868a-e1655a0840f1
+		summarizeBy: none
+		sourceColumn: FacilityType
+
+	/// Primary commodity produced by a mine, determined by the economic value of the commodities produced.
+	column PrimaryCommodity
+		dataType: string
+		lineageTag: d2c79410-c631-5f0f-b49a-641dee6574f8
+		summarizeBy: none
+		sourceColumn: PrimaryCommodity
+
+	/// Materials, commodities and products produced by this facility.
+	column CommoditiesProducts
+		dataType: string
+		lineageTag: a7807545-cb56-54e8-aa45-5a616c6f8f9a
+		summarizeBy: none
+		sourceColumn: CommoditiesProducts
+
+	/// Equipment present at this facility.
+	column FacilityEquipment
+		dataType: string
+		lineageTag: ebda7f3a-2f67-512e-91c3-db0e3df820a2
+		summarizeBy: none
+		sourceColumn: FacilityEquipment
+
+	/// Activity status of the facility, lower-cased. Null when not stated.
+	column ActivityStatus
+		dataType: string
+		lineageTag: b4722413-b53a-5e78-b3bf-7e79a13517ae
+		summarizeBy: none
+		sourceColumn: ActivityStatus
+
+	/// Country in which the facility or sub-site is located.
+	column Country
+		dataType: string
+		lineageTag: cb889d79-508c-57d9-84ec-76998084097d
+		summarizeBy: none
+		sourceColumn: Country
+
+	/// Key to map the facility to GADM regions (level 0).
+	column GadmLevel0Code
+		dataType: string
+		lineageTag: ebe9704d-6d43-526a-bab3-8bee3b0d2a2b
+		summarizeBy: none
+		sourceColumn: GadmLevel0Code
+
+	/// Key to map the facility to GADM regions (level 1).
+	column GadmLevel1Code
+		dataType: string
+		lineageTag: 84e45ab3-9bfa-5a33-8798-99b8033b306a
+		summarizeBy: none
+		sourceColumn: GadmLevel1Code
+
+	/// Key to map the facility to GADM regions (level 2).
+	column GadmLevel2Code
+		dataType: string
+		lineageTag: 055f9322-31bd-5cb1-b766-45e6849e2239
+		summarizeBy: none
+		sourceColumn: GadmLevel2Code
+
+	/// Key to map the facility to GADM regions (level 3).
+	column GadmLevel3Code
+		dataType: string
+		lineageTag: 2aa22d06-372e-53a5-bd06-84221abd2d49
+		summarizeBy: none
+		sourceColumn: GadmLevel3Code
+
+	/// Key to map the facility to GADM regions (level 4).
+	column GadmLevel4Code
+		dataType: string
+		lineageTag: 98ff8f3b-6635-5506-b7a0-7c5145173515
+		summarizeBy: none
+		sourceColumn: GadmLevel4Code
+
+	/// Geometry of the facility as text, of type POINT or MULTIPOINT, or empty.
+	column LocationGeometry
+		dataType: string
+		lineageTag: 90a413ca-4632-52d2-8938-6202867c373c
+		summarizeBy: none
+		sourceColumn: LocationGeometry
+
+	/// Free-text comment.
+	column Comment
+		dataType: string
+		lineageTag: fc7db78e-8419-5cc9-98ee-45eef03ac816
+		summarizeBy: none
+		sourceColumn: Comment
+
+	/// Surface area of the facility or sub-site, in square kilometers.
+	column SurfaceAreaSquareKilometers
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: c5f17bda-6fc1-5ae5-a965-4fc2f22c6cd2
+		summarizeBy: none
+		sourceColumn: SurfaceAreaSquareKilometers
+
+	/// Concession area of the facility or sub-site, in square kilometers.
+	column ConcessionAreaSquareKilometers
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: eaf2ee2b-9752-508f-8888-d22f2dda7643
+		summarizeBy: none
+		sourceColumn: ConcessionAreaSquareKilometers
+
+	/// Year in which production at this facility started.
+	column ProductionStartYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 95552dc3-8101-5dc9-b012-929ab72590a4
+		summarizeBy: none
+		sourceColumn: ProductionStartYear
+
+	/// Year in which production at this facility ended.
+	column ProductionEndYear
+		dataType: int64
+		formatString: 0
+		lineageTag: cb4b4fe5-6665-5e0b-a47c-6f33ff4dda6c
+		summarizeBy: none
+		sourceColumn: ProductionEndYear
+
+	/// Year to which the activity status relates.
+	column ActivityStatusYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 43cb6b9d-c7f6-592c-becf-033cddba1170
+		summarizeBy: none
+		sourceColumn: ActivityStatusYear
+
+	partition DimFacility = entity
+		mode: directLake
+		source
+			entityName: DimFacility
+			schemaName: facilities
+			expressionSource: DatabaseQuery

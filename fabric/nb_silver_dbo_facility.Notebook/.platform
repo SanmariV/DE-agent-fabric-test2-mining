@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_silver_dbo_facility",
+    "description": "Silver load of dbo.Facility."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "51f1df36-2090-5e70-bcac-0f48223f075b"
+  }
+}

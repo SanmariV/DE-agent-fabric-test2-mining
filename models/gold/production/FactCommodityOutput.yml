@@ -1,0 +1,89 @@
+description: >
+  One row per commodity contained in a mineral stream of a facility and year.
+  Grain = CommodityProduction_BK. The stream type comes from the linked
+  mineral stream and is null when no mineral stream is linked.
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: CommodityProduction_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the commodity record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility producing the commodity (-1 unknown).
+  - name: DimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Mineral the commodity is contained in (-1 unknown).
+  - name: CommodityDimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Commodity the record relates to (-1 unknown).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: StreamTypeCode
+    data_type: varchar(20)
+    description: >
+      Stream type of the linked mineral stream (ORE MINED, ORE PROCESSED,
+      CONCENTRATE, NM MINERAL). Null when no mineral stream is linked.
+    tests:
+      - accepted_values: {values: [ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL]}
+  - name: ReportingPeriod
+    data_type: varchar(30)
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the commodity, in tonnes.
+  - name: GradePartsPerMillion
+    data_type: decimal(18,4)
+    description: Grade of the material relating to the commodity, in parts per million.
+  - name: RecoveryRate
+    data_type: decimal(18,8)
+    description: Share of output material recovered from the output material contained in the input material.
+  - name: YieldPartsPerMillion
+    data_type: decimal(18,4)
+    description: Grade relating to the commodity multiplied by the recovery rate, in parts per million.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material sold, in tonnes.
+  - name: MetalPayableTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material contained in the input material after the operator's deduction, in tonnes.
+measures:
+  - name: CommodityTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(ValueTonnes)
+    description: Total mass of the commodity, in tonnes.
+    format: "#,0.00"
+  - name: CommodityAmountSoldTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(AmountSoldTonnes)
+    description: Total mass of output material sold, in tonnes.
+    format: "#,0.00"
+  - name: CommodityMetalPayableTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(MetalPayableTonnes)
+    description: Total payable metal, in tonnes.
+    format: "#,0.00"
+  - name: CommodityRecoveryRateAverage
+    meta: {matrix: {unit: Ratio}}
+    expression: avg(RecoveryRate)
+    description: Simple average recovery rate over the records, not weighted by tonnes. TODO(confirm with the business)
+    format: "0.0000"
+  - name: CommodityGradePartsPerMillionAverage
+    meta: {matrix: {unit: Parts per million}}
+    expression: avg(GradePartsPerMillion)
+    description: Simple average grade in parts per million over the records, not weighted by tonnes. TODO(confirm with the business)
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

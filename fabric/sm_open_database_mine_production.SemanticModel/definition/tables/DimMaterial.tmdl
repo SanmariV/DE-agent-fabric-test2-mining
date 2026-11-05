@@ -1,0 +1,69 @@
+/// One row per material (mineral, commodity or other product) with its categories and aggregate bundle. Grain = Material_BK. The source is a single static snapshot, so attributes are overwritten, not versioned.
+table DimMaterial
+	lineageTag: 37a8ada2-8242-55ba-9867-2850cfc68dfd
+	sourceLineageTag: [production].[DimMaterial]
+
+	/// Surrogate key of DimMaterial.
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 889cc130-c5a1-5c5b-bd17-219f560ce154
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// ID that uniquely identifies the material.
+	column Material_BK
+		dataType: string
+		lineageTag: 854060a5-41bc-5cca-8e17-f2b7db88b82e
+		summarizeBy: none
+		sourceColumn: Material_BK
+
+	/// Name of the material.
+	column MaterialName
+		dataType: string
+		lineageTag: 7188f4b1-843f-539c-8e18-d93ec3f25f03
+		summarizeBy: none
+		sourceColumn: MaterialName
+
+	/// Category of the material: MINERAL, COMMODITY, OTHER_PRODUCT, FF_MINERAL, FF_COMMODITY or AGGREGATE.
+	column MaterialCategoryCode
+		dataType: string
+		lineageTag: 19f8a85a-331c-5cf7-bb59-ee6ed41c893a
+		summarizeBy: none
+		sourceColumn: MaterialCategoryCode
+
+	/// Secondary category of the material, more detailed than the material category.
+	column MaterialSecondaryCategory
+		dataType: string
+		lineageTag: 39afd0df-5611-58b2-a9b3-4d74e8979028
+		summarizeBy: none
+		sourceColumn: MaterialSecondaryCategory
+
+	/// ID that uniquely identifies the bundle of materials this material belongs to.
+	column AggregateMaterial_BK
+		dataType: string
+		lineageTag: 836bf85c-5689-52c3-9033-ca7a46a854be
+		summarizeBy: none
+		sourceColumn: AggregateMaterial_BK
+
+	/// Name of the bundle of materials.
+	column AggregateMaterialName
+		dataType: string
+		lineageTag: d5731094-06ce-51d4-b2a9-6fe0cfa03adf
+		summarizeBy: none
+		sourceColumn: AggregateMaterialName
+
+	/// Materials contained in the bundle. Only applies when the category is aggregate.
+	column MaterialsContained
+		dataType: string
+		lineageTag: 18727019-85f8-5d28-9de6-db2a4b3177b9
+		summarizeBy: none
+		sourceColumn: MaterialsContained
+
+	partition DimMaterial = entity
+		mode: directLake
+		source
+			entityName: DimMaterial
+			schemaName: production
+			expressionSource: DatabaseQuery

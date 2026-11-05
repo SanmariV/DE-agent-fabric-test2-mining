@@ -1,0 +1,85 @@
+/// One row per facility, year and material with the stated output or input capacity in tonnes per year. Grain = FacilityCapacity_BK. Capacity is stated either as input capacity of a material or as output capacity of a commodity.
+table FactFacilityCapacity
+	lineageTag: 4137fc9a-bd6c-5332-a98d-d4ad2f9a4eaf
+	sourceLineageTag: [facilities].[FactFacilityCapacity]
+
+	/// Total stated capacity, in tonnes per year. Input and output capacity of the same facility are separate rows, so do not add them for one facility. TODO(confirm with the business)
+	measure CapacityTonnesPerYearTotal = SUM('FactFacilityCapacity'[CapacityTonnesPerYear])
+		formatString: #,0.00
+		lineageTag: e23fa30d-38ea-5d09-af1f-ac729e603cbc
+
+	/// Surrogate key of FactFacilityCapacity.
+	column FactFacilityCapacity_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9e6f9300-9ea0-5a42-9600-1e3e6a863378
+		summarizeBy: none
+		sourceColumn: FactFacilityCapacity_SK
+
+	/// Unique ID of the capacity record from the source.
+	column FacilityCapacity_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: f2db9f58-8286-5d61-8f10-8d4ce98814e1
+		summarizeBy: none
+		sourceColumn: FacilityCapacity_BK
+
+	/// Facility the capacity belongs to (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 56a98b54-4e93-5e15-b1f4-2f475ea9e103
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Material whose input capacity is stated (-1 unknown or not stated).
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 7c56ea63-7ef3-5c7c-8422-b4ba48767855
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// Commodity whose output capacity is stated (-1 unknown or not stated).
+	column CommodityDimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: bd6bd94c-da8d-57d1-b090-d02344d365db
+		summarizeBy: none
+		sourceColumn: CommodityDimMaterial_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 763ed568-5439-5b82-8be2-49d0cdc6c786
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Year to which the capacity relates.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 82f0153e-5637-5c71-9871-850ba39d3720
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Mass of input or output capacity, in tonnes per year. Output capacity of the commodity when a commodity is given, otherwise input capacity of the material.
+	column CapacityTonnesPerYear
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 61350bd1-ba6f-5592-b976-8d33b68e672e
+		summarizeBy: none
+		sourceColumn: CapacityTonnesPerYear
+
+	partition FactFacilityCapacity = entity
+		mode: directLake
+		source
+			entityName: FactFacilityCapacity
+			schemaName: facilities
+			expressionSource: DatabaseQuery

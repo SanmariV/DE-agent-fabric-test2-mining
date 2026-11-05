@@ -2,7 +2,7 @@
 # No hosts, ids or secrets here: each target names the environment
 # variables that hold them.
 
-project: my_fabric_project          # snake_case; set by /scaffold-fabric-project
+project: open_database_mine_production   # snake_case; set by /scaffold-fabric-project
 
 items:                              # item names, the same in every workspace
   bronze_lakehouse: lh_bronze       # landed by Fabric pipelines (read-only)
@@ -14,7 +14,7 @@ silver:
   # Optional: install fabric_de_common from a wheel in each notebook instead
   # of using an Environment (leave unset to use the Environment).
   # Upload the wheel to the silver Lakehouse first (Files > libs).
-  # install_wheel: /lakehouse/default/Files/libs/fabric_de_common-0.1.0-py3-none-any.whl
+  install_wheel: /lakehouse/default/Files/libs/fabric_de_common-0.1.0-py3-none-any.whl
 
 ai:                                 # semantic model and Data Agents
   # semantic_model: sm_my_fabric_project   # default: sm_<project>

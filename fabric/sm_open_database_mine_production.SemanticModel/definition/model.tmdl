@@ -1,0 +1,18 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+
+ref table DimDataSource
+ref table DimFacility
+ref table FactFacilityCapacity
+ref table FactFacilityOwnership
+ref table DimMaterial
+ref table FactCommodityOutput
+ref table FactFacilityProcessing
+ref table FactFacilityYearProduction
+ref table FactMaterialStream
+ref table FactReserve
+ref table FactTransport
+ref table FactWaste
+ref expression DatabaseQuery

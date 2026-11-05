@@ -25,11 +25,20 @@ GO
 -- Columns added to the spec after the first deploy.
 -- Fabric can only add nullable columns; type changes need a
 -- migration (see the standards, section 7.5).
-IF COL_LENGTH('distribution.DimAgent', 'AgentName') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'distribution'
+               AND TABLE_NAME = 'DimAgent'
+               AND COLUMN_NAME = 'AgentName')
     ALTER TABLE [distribution].[DimAgent] ADD [AgentName] varchar(200) NULL;
-IF COL_LENGTH('distribution.DimAgent', 'BranchCode') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'distribution'
+               AND TABLE_NAME = 'DimAgent'
+               AND COLUMN_NAME = 'BranchCode')
     ALTER TABLE [distribution].[DimAgent] ADD [BranchCode] varchar(10) NULL;
-IF COL_LENGTH('distribution.DimAgent', 'IsActive') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'distribution'
+               AND TABLE_NAME = 'DimAgent'
+               AND COLUMN_NAME = 'IsActive')
     ALTER TABLE [distribution].[DimAgent] ADD [IsActive] bit NULL;
 GO
 

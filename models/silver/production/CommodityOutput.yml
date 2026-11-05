@@ -1,0 +1,64 @@
+description: >
+  One row per commodity record, enriched with the stream type and mass of the
+  mineral stream it was derived from. Grain = CommodityProduction_BK.
+  Rows without a linked mineral stream (null MineralProduction_BK) keep null
+  mineral columns; no link is guessed from facility, year and material.
+columns:
+  - name: CommodityProduction_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the commodity record, from CommodityProduction.
+  - name: Facility_BK
+    data_type: string
+    description: Facility producing the commodity; key of Facility.
+  - name: Material_BK
+    data_type: string
+    description: Mineral the commodity is contained in; key of Material.
+  - name: CommodityMaterial_BK
+    data_type: string
+    description: Commodity the record relates to; key of Material.
+  - name: MineralProduction_BK
+    data_type: int
+    description: Linked mineral stream; key of MineralProduction. Null when no mineral stream is linked.
+  - name: DataSource_BK
+    data_type: string
+    description: Source of the record; key of DataSource.
+  - name: StreamTypeCode
+    data_type: string
+    description: >
+      Stream type of the linked mineral stream (ORE MINED, ORE PROCESSED,
+      CONCENTRATE, NM MINERAL). Null when no mineral stream is linked.
+    tests:
+      - accepted_values: {values: [ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL]}
+  - name: ReportingPeriod
+    data_type: string
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the commodity, in tonnes.
+  - name: GradePartsPerMillion
+    data_type: decimal(18,4)
+    description: Grade of the material relating to the commodity, in parts per million.
+  - name: RecoveryRate
+    data_type: decimal(18,6)
+    description: Share of output material recovered from the output material contained in the input material.
+  - name: YieldPartsPerMillion
+    data_type: decimal(18,4)
+    description: Grade relating to the commodity multiplied by the recovery rate, in parts per million.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material sold, in tonnes.
+  - name: MetalPayableTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material contained in the input material after the operator's deduction, in tonnes.
+  - name: MineralValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the linked mineral stream, in tonnes. Null when no mineral stream is linked.
+  - name: MineralOverallGradePartsPerMillion
+    data_type: decimal(18,4)
+    description: Overall grade of all commodities in the linked mineral stream, in parts per million. Null when no mineral stream is linked.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

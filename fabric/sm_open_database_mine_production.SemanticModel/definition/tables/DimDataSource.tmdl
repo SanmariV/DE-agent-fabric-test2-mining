@@ -1,0 +1,41 @@
+/// One row per source publication or website that backs the facility and production records. Grain = DataSource_BK. The source is a single static snapshot, so attributes are overwritten, not versioned.
+table DimDataSource
+	lineageTag: da21325b-e06b-5484-9347-d017ccdc0fd6
+	sourceLineageTag: [facilities].[DimDataSource]
+
+	/// Surrogate key of DimDataSource.
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 5c511922-b067-5fc8-b759-df3a31370023
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Unique ID for each source.
+	column DataSource_BK
+		dataType: string
+		lineageTag: d9cf628c-5b8b-5595-af02-f9b124f932bf
+		summarizeBy: none
+		sourceColumn: DataSource_BK
+
+	/// Names of the source publications or websites.
+	column SourceName
+		dataType: string
+		lineageTag: ebbf04c1-1d5a-52b9-8b20-3e2253946231
+		summarizeBy: none
+		sourceColumn: SourceName
+
+	/// URLs of the source publications or websites.
+	column SourceUrl
+		dataType: string
+		lineageTag: 616f8e6e-54a1-5910-b62c-61046e607ade
+		summarizeBy: none
+		sourceColumn: SourceUrl
+
+	partition DimDataSource = entity
+		mode: directLake
+		source
+			entityName: DimDataSource
+			schemaName: facilities
+			expressionSource: DatabaseQuery

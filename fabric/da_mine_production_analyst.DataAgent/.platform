@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataAgent",
+    "displayName": "da_mine_production_analyst",
+    "description": "Answers questions about mines and processing facilities, their production, waste, transport, reserves, capacity and ownership, from the Open Database of Mine Production."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "339838e7-55d4-59ec-b587-5696fb14490d"
+  }
+}

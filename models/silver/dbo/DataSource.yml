@@ -1,0 +1,19 @@
+description: >
+  One row per source publication or website that backs the facility and
+  production records. Grain = DataSource_BK.
+source: {source: dbo, table: source_ids}
+load: {mode: full}
+columns:
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    business_key: true
+    description: Unique ID for each source.
+  - name: SourceName
+    data_type: string
+    expression: trim(sources)
+    description: Names of the source publications or websites.
+  - name: SourceUrl
+    data_type: string
+    expression: trim(source_urls)
+    description: URLs of the source publications or websites.

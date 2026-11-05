@@ -1,0 +1,67 @@
+description: >
+  One row per mineral or coal stream record of a facility, year and material.
+  Grain = MaterialStream_BK (stream source + source row id). Repeated
+  facility, year, material and type combinations in the source are kept as
+  separate rows.
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: MaterialStream_BK
+    data_type: varchar(30)
+    business_key: true
+    description: Stream source code and source row id, for example MINERAL-123 or COAL-456.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility producing the stream (-1 unknown).
+  - name: DimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Material of the stream (-1 unknown).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: StreamSourceCode
+    data_type: varchar(10)
+    description: Table the stream comes from (MINERAL or COAL).
+    tests:
+      - accepted_values: {values: [MINERAL, COAL]}
+  - name: StreamTypeCode
+    data_type: varchar(20)
+    description: >
+      Type of the stream: ORE MINED, ORE PROCESSED, CONCENTRATE or NM MINERAL
+      for mineral rows, COAL MINED or CLEAN COAL for coal rows.
+    tests:
+      - accepted_values: {values: [ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL, COAL MINED, CLEAN COAL]}
+  - name: ReportingPeriod
+    data_type: varchar(30)
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the stream, in tonnes.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material sold, in tonnes.
+measures:
+  - name: StreamTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(ValueTonnes)
+    description: >
+      Total mass of the streams, in tonnes. Streams of different types (for
+      example ore mined and concentrate) overlap, so report by stream type.
+      TODO(confirm with the business)
+    format: "#,0.00"
+  - name: StreamAmountSoldTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(AmountSoldTonnes)
+    description: Total mass of output material sold, in tonnes.
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

@@ -1,0 +1,61 @@
+description: >
+  One row per facility, year and transported product with the destination and
+  mode of transport. Grain = TransportFlow_BK (source row id).
+source: {source: dbo, table: transport}
+load: {mode: full}
+columns:
+  - name: TransportFlow_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility the product is transported from; key of Facility.
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(product))
+    description: Specific material transported; key of Material. TODO(165 of 941 rows have no match in Material).
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: TransportTo
+    data_type: string
+    expression: trim(transport_to)
+    description: Destination of the transport.
+  - name: TransportBy
+    data_type: string
+    expression: trim(transport_by)
+    description: Mode of transport.
+  - name: ExportTo
+    data_type: string
+    expression: trim(export_to)
+    description: Destination of the exported product.
+  - name: ReportingPeriod
+    data_type: string
+    expression: coalesce(trim(reporting_period), 'January-December')
+    description: >
+      Period in which the stream occurred. Always relates to the year in which
+      the period ends. January-December when not specified in the source.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(value_tonnes as decimal(18,4))
+    description: Mass of the transported product, in tonnes.
+  - name: IsExport
+    data_type: boolean
+    expression: >
+      case when lower(trim(export)) = 'yes' then true
+           when lower(trim(export)) = 'no' then false end
+    description: True when the material is exported. Null when not stated.
+  - name: ReportingYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

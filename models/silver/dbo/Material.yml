@@ -1,0 +1,39 @@
+description: >
+  One row per material (mineral, commodity or other product) with its
+  categories and aggregate bundle. Grain = Material_BK.
+source: {source: dbo, table: material_ids}
+load: {mode: full}
+columns:
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(material_id))
+    business_key: true
+    description: ID that uniquely identifies the material.
+  - name: MaterialName
+    data_type: string
+    expression: trim(material_name)
+    description: Name of the material.
+  - name: MaterialCategoryCode
+    data_type: string
+    expression: upper(trim(material_category))
+    description: >
+      Category of the material: MINERAL, COMMODITY, OTHER_PRODUCT, FF_MINERAL,
+      FF_COMMODITY or AGGREGATE.
+    tests:
+      - accepted_values: {values: [MINERAL, COMMODITY, OTHER_PRODUCT, FF_MINERAL, FF_COMMODITY, AGGREGATE]}
+  - name: MaterialSecondaryCategory
+    data_type: string
+    expression: trim(material_category_2)
+    description: Secondary category of the material, more detailed than the material category.
+  - name: AggregateMaterial_BK
+    data_type: string
+    expression: upper(trim(material_id_agg))
+    description: ID that uniquely identifies the bundle of materials this material belongs to.
+  - name: AggregateMaterialName
+    data_type: string
+    expression: trim(material_name_agg)
+    description: Name of the bundle of materials.
+  - name: MaterialsContained
+    data_type: string
+    expression: trim(materials_contained)
+    description: Materials contained in the bundle. Only applies when the category is aggregate.

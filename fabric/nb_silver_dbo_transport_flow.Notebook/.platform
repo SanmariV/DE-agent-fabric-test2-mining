@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_silver_dbo_transport_flow",
+    "description": "Silver load of dbo.TransportFlow."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c2e1fa49-ebfd-51c6-b5b5-3a201b7a8f44"
+  }
+}

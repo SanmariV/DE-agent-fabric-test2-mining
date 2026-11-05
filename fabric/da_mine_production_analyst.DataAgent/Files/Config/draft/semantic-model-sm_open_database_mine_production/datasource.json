@@ -1,0 +1,936 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "00000000-0000-0000-0000-0000000000a3",
+  "workspaceId": "00000000-0000-0000-0000-0000000000a0",
+  "displayName": "sm_open_database_mine_production",
+  "type": "semantic_model",
+  "userDescription": "Direct Lake semantic model over gold.",
+  "dataSourceInstructions": "Use for totals, counts and trends. Prefer the measures over summing columns yourself, and report production by stream type and year.",
+  "elements": [
+    {
+      "display_name": "DimDataSource",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per source publication or website that backs the facility and production records. Grain = DataSource_BK. The source is a single static snapshot, so attributes are overwritten, not versioned.",
+      "children": [
+        {
+          "display_name": "DataSource_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Unique ID for each source."
+        },
+        {
+          "display_name": "SourceName",
+          "type": "semantic_model.column",
+          "data_type": "varchar(500)",
+          "is_selected": true,
+          "description": "Names of the source publications or websites."
+        },
+        {
+          "display_name": "SourceUrl",
+          "type": "semantic_model.column",
+          "data_type": "varchar(1000)",
+          "is_selected": true,
+          "description": "URLs of the source publications or websites."
+        }
+      ]
+    },
+    {
+      "display_name": "DimFacility",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per mine, processing facility or sub-site (including a few company and region records, see FacilityType). Grain = Facility_BK. The source is a single static snapshot, so attributes are overwritten, not versioned.",
+      "children": [
+        {
+          "display_name": "Facility_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "ID that uniquely identifies each mine, processing facility and sub-site."
+        },
+        {
+          "display_name": "FacilityName",
+          "type": "semantic_model.column",
+          "data_type": "varchar(100)",
+          "is_selected": true,
+          "description": "Name of the facility."
+        },
+        {
+          "display_name": "FacilityOtherNames",
+          "type": "semantic_model.column",
+          "data_type": "varchar(400)",
+          "is_selected": true,
+          "description": "Other names of the facility."
+        },
+        {
+          "display_name": "SubSiteName",
+          "type": "semantic_model.column",
+          "data_type": "varchar(120)",
+          "is_selected": true,
+          "description": "Name of the sub-site."
+        },
+        {
+          "display_name": "SubSiteOtherNames",
+          "type": "semantic_model.column",
+          "data_type": "varchar(200)",
+          "is_selected": true,
+          "description": "Other names of the sub-site."
+        },
+        {
+          "display_name": "FacilityType",
+          "type": "semantic_model.column",
+          "data_type": "varchar(50)",
+          "is_selected": true,
+          "description": "Type of facility, for example Mine, Refinery, Smelter, or a comma separated combination. Also holds Company, Region and Concentrator."
+        },
+        {
+          "display_name": "PrimaryCommodity",
+          "type": "semantic_model.column",
+          "data_type": "varchar(50)",
+          "is_selected": true,
+          "description": "Primary commodity produced by a mine, determined by the economic value of the commodities produced."
+        },
+        {
+          "display_name": "CommoditiesProducts",
+          "type": "semantic_model.column",
+          "data_type": "varchar(400)",
+          "is_selected": true,
+          "description": "Materials, commodities and products produced by this facility."
+        },
+        {
+          "display_name": "FacilityEquipment",
+          "type": "semantic_model.column",
+          "data_type": "varchar(800)",
+          "is_selected": true,
+          "description": "Equipment present at this facility."
+        },
+        {
+          "display_name": "ActivityStatus",
+          "type": "semantic_model.column",
+          "data_type": "varchar(50)",
+          "is_selected": true,
+          "description": "Activity status of the facility, lower-cased. Null when not stated."
+        },
+        {
+          "display_name": "Country",
+          "type": "semantic_model.column",
+          "data_type": "varchar(60)",
+          "is_selected": true,
+          "description": "Country in which the facility or sub-site is located."
+        },
+        {
+          "display_name": "GadmLevel0Code",
+          "type": "semantic_model.column",
+          "data_type": "varchar(10)",
+          "is_selected": true,
+          "description": "Key to map the facility to GADM regions (level 0)."
+        },
+        {
+          "display_name": "GadmLevel1Code",
+          "type": "semantic_model.column",
+          "data_type": "varchar(80)",
+          "is_selected": true,
+          "description": "Key to map the facility to GADM regions (level 1)."
+        },
+        {
+          "display_name": "GadmLevel2Code",
+          "type": "semantic_model.column",
+          "data_type": "varchar(200)",
+          "is_selected": true,
+          "description": "Key to map the facility to GADM regions (level 2)."
+        },
+        {
+          "display_name": "GadmLevel3Code",
+          "type": "semantic_model.column",
+          "data_type": "varchar(300)",
+          "is_selected": true,
+          "description": "Key to map the facility to GADM regions (level 3)."
+        },
+        {
+          "display_name": "GadmLevel4Code",
+          "type": "semantic_model.column",
+          "data_type": "varchar(400)",
+          "is_selected": true,
+          "description": "Key to map the facility to GADM regions (level 4)."
+        },
+        {
+          "display_name": "LocationGeometry",
+          "type": "semantic_model.column",
+          "data_type": "varchar(2000)",
+          "is_selected": true,
+          "description": "Geometry of the facility as text, of type POINT or MULTIPOINT, or empty."
+        },
+        {
+          "display_name": "Comment",
+          "type": "semantic_model.column",
+          "data_type": "varchar(1000)",
+          "is_selected": true,
+          "description": "Free-text comment."
+        },
+        {
+          "display_name": "SurfaceAreaSquareKilometers",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Surface area of the facility or sub-site, in square kilometers."
+        },
+        {
+          "display_name": "ConcessionAreaSquareKilometers",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Concession area of the facility or sub-site, in square kilometers."
+        },
+        {
+          "display_name": "ProductionStartYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which production at this facility started."
+        },
+        {
+          "display_name": "ProductionEndYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which production at this facility ended."
+        },
+        {
+          "display_name": "ActivityStatusYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year to which the activity status relates."
+        }
+      ]
+    },
+    {
+      "display_name": "FactFacilityCapacity",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility, year and material with the stated output or input capacity in tonnes per year. Grain = FacilityCapacity_BK. Capacity is stated either as input capacity of a material or as output capacity of a commodity.",
+      "children": [
+        {
+          "display_name": "FacilityCapacity_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the capacity record from the source."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year to which the capacity relates."
+        },
+        {
+          "display_name": "CapacityTonnesPerYear",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of input or output capacity, in tonnes per year. Output capacity of the commodity when a commodity is given, otherwise input capacity of the material."
+        },
+        {
+          "display_name": "CapacityTonnesPerYearTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total stated capacity, in tonnes per year. Input and output capacity of the same facility are separate rows, so do not add them for one facility. TODO(confirm with the business)"
+        }
+      ]
+    },
+    {
+      "display_name": "FactFacilityOwnership",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility and year with the owners (and their ownership shares) and the operators. Grain = FacilityOwnership_BK. Owners and operators are kept as text and are not split into one row per owner.",
+      "children": [
+        {
+          "display_name": "FacilityOwnership_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the ownership record from the source."
+        },
+        {
+          "display_name": "OwnershipYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year for which the ownership shares and operator apply."
+        },
+        {
+          "display_name": "Owners",
+          "type": "semantic_model.column",
+          "data_type": "varchar(400)",
+          "is_selected": true,
+          "description": "Owners of the facility, with their ownership share in brackets."
+        },
+        {
+          "display_name": "Operators",
+          "type": "semantic_model.column",
+          "data_type": "varchar(300)",
+          "is_selected": true,
+          "description": "Operators of the facility."
+        },
+        {
+          "display_name": "OwnershipRecordCount",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Number of ownership records (one per facility and year). TODO(confirm with the business)"
+        }
+      ]
+    },
+    {
+      "display_name": "DimMaterial",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per material (mineral, commodity or other product) with its categories and aggregate bundle. Grain = Material_BK. The source is a single static snapshot, so attributes are overwritten, not versioned.",
+      "children": [
+        {
+          "display_name": "Material_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "ID that uniquely identifies the material."
+        },
+        {
+          "display_name": "MaterialName",
+          "type": "semantic_model.column",
+          "data_type": "varchar(150)",
+          "is_selected": true,
+          "description": "Name of the material."
+        },
+        {
+          "display_name": "MaterialCategoryCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Category of the material: MINERAL, COMMODITY, OTHER_PRODUCT, FF_MINERAL, FF_COMMODITY or AGGREGATE."
+        },
+        {
+          "display_name": "MaterialSecondaryCategory",
+          "type": "semantic_model.column",
+          "data_type": "varchar(80)",
+          "is_selected": true,
+          "description": "Secondary category of the material, more detailed than the material category."
+        },
+        {
+          "display_name": "AggregateMaterial_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "ID that uniquely identifies the bundle of materials this material belongs to."
+        },
+        {
+          "display_name": "AggregateMaterialName",
+          "type": "semantic_model.column",
+          "data_type": "varchar(80)",
+          "is_selected": true,
+          "description": "Name of the bundle of materials."
+        },
+        {
+          "display_name": "MaterialsContained",
+          "type": "semantic_model.column",
+          "data_type": "varchar(400)",
+          "is_selected": true,
+          "description": "Materials contained in the bundle. Only applies when the category is aggregate."
+        }
+      ]
+    },
+    {
+      "display_name": "FactCommodityOutput",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per commodity contained in a mineral stream of a facility and year. Grain = CommodityProduction_BK. The stream type comes from the linked mineral stream and is null when no mineral stream is linked.",
+      "children": [
+        {
+          "display_name": "CommodityProduction_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the commodity record from the source."
+        },
+        {
+          "display_name": "StreamTypeCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Stream type of the linked mineral stream (ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL). Null when no mineral stream is linked."
+        },
+        {
+          "display_name": "ReportingPeriod",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Period in which the stream occurred; relates to the year in which the period ends."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which the reporting period ends."
+        },
+        {
+          "display_name": "ValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of the commodity, in tonnes."
+        },
+        {
+          "display_name": "GradePartsPerMillion",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Grade of the material relating to the commodity, in parts per million."
+        },
+        {
+          "display_name": "RecoveryRate",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,8)",
+          "is_selected": true,
+          "description": "Share of output material recovered from the output material contained in the input material."
+        },
+        {
+          "display_name": "YieldPartsPerMillion",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Grade relating to the commodity multiplied by the recovery rate, in parts per million."
+        },
+        {
+          "display_name": "AmountSoldTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of output material sold, in tonnes."
+        },
+        {
+          "display_name": "MetalPayableTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of output material contained in the input material after the operator's deduction, in tonnes."
+        },
+        {
+          "display_name": "CommodityTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of the commodity, in tonnes."
+        },
+        {
+          "display_name": "CommodityAmountSoldTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of output material sold, in tonnes."
+        },
+        {
+          "display_name": "CommodityMetalPayableTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total payable metal, in tonnes."
+        },
+        {
+          "display_name": "CommodityRecoveryRateAverage",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Simple average recovery rate over the records, not weighted by tonnes. TODO(confirm with the business)"
+        },
+        {
+          "display_name": "CommodityGradePartsPerMillionAverage",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Simple average grade in parts per million over the records, not weighted by tonnes. TODO(confirm with the business)"
+        }
+      ]
+    },
+    {
+      "display_name": "FactFacilityProcessing",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility, year, input material and output material of a processing step. Grain = FacilityProcessing_BK. Input and output materials are free text and are not linked to DimMaterial. TODO(confirm how input and output text values map to DimMaterial).",
+      "children": [
+        {
+          "display_name": "FacilityProcessing_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the processing record from the source."
+        },
+        {
+          "display_name": "FacilityType",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Type of processing facility, for example Refinery or Smelter."
+        },
+        {
+          "display_name": "InputMaterial",
+          "type": "semantic_model.column",
+          "data_type": "varchar(100)",
+          "is_selected": true,
+          "description": "Input materials, as free text."
+        },
+        {
+          "display_name": "OutputMaterial",
+          "type": "semantic_model.column",
+          "data_type": "varchar(120)",
+          "is_selected": true,
+          "description": "Output materials, as free text."
+        },
+        {
+          "display_name": "ReportingPeriod",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Period in which the stream occurred; relates to the year in which the period ends."
+        },
+        {
+          "display_name": "HasPurchasedMaterial",
+          "type": "semantic_model.column",
+          "data_type": "bit",
+          "is_selected": true,
+          "description": "True when third-party material is included in the processing at a mine with an on-site processing facility. Null when not stated."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which the reporting period ends."
+        },
+        {
+          "display_name": "InputValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of input materials, in tonnes."
+        },
+        {
+          "display_name": "OutputValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of output materials, in tonnes."
+        },
+        {
+          "display_name": "GradePartsPerMillion",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Grade of the material, in parts per million."
+        },
+        {
+          "display_name": "RecoveryRate",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,8)",
+          "is_selected": true,
+          "description": "Share of output material recovered from the output material contained in the input material."
+        },
+        {
+          "display_name": "AmountSoldTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of output material sold, in tonnes."
+        },
+        {
+          "display_name": "MetalPayableTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of output material contained in the input material after the operator's deduction, in tonnes. Null when the bronze text is not a number."
+        },
+        {
+          "display_name": "InputTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of input materials, in tonnes."
+        },
+        {
+          "display_name": "OutputTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of output materials, in tonnes."
+        },
+        {
+          "display_name": "ProcessingAmountSoldTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of output material sold, in tonnes."
+        },
+        {
+          "display_name": "ProcessingMetalPayableTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total payable metal, in tonnes."
+        },
+        {
+          "display_name": "ProcessingRecoveryRateAverage",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Simple average recovery rate over the records, not weighted by tonnes."
+        }
+      ]
+    },
+    {
+      "display_name": "FactFacilityYearProduction",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility and reporting year with the mass mined, processed, concentrated and wasted. Grain = FacilityYear_BK. TODO(confirm that tonnes may be summed across different materials of one facility and year; the data cannot answer this).",
+      "children": [
+        {
+          "display_name": "FacilityYear_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Facility key and reporting year joined with a hyphen, for example F123-2019."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which the reporting period ends."
+        },
+        {
+          "display_name": "OreMinedTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(28,4)",
+          "is_selected": true,
+          "description": "Sum of ore mined over all materials in the year, in tonnes. Null when no ore mined row exists."
+        },
+        {
+          "display_name": "OreProcessedTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(28,4)",
+          "is_selected": true,
+          "description": "Sum of ore processed over all materials in the year, in tonnes. Null when no ore processed row exists."
+        },
+        {
+          "display_name": "ConcentrateTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(28,4)",
+          "is_selected": true,
+          "description": "Sum of concentrate over all materials in the year, in tonnes. Null when no concentrate row exists."
+        },
+        {
+          "display_name": "WasteTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(28,4)",
+          "is_selected": true,
+          "description": "Sum of waste over all waste streams in the year, in tonnes. Null when no waste row exists."
+        },
+        {
+          "display_name": "OreMinedTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total ore mined, in tonnes. TODO(confirm with the business)"
+        },
+        {
+          "display_name": "OreProcessedTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total ore processed, in tonnes. TODO(confirm with the business)"
+        },
+        {
+          "display_name": "ConcentrateTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total concentrate produced, in tonnes. TODO(confirm with the business)"
+        },
+        {
+          "display_name": "FacilityYearWasteTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total waste, in tonnes. TODO(confirm with the business)"
+        }
+      ]
+    },
+    {
+      "display_name": "FactMaterialStream",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per mineral or coal stream record of a facility, year and material. Grain = MaterialStream_BK (stream source + source row id). Repeated facility, year, material and type combinations in the source are kept as separate rows.",
+      "children": [
+        {
+          "display_name": "MaterialStream_BK",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Stream source code and source row id, for example MINERAL-123 or COAL-456."
+        },
+        {
+          "display_name": "StreamSourceCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(10)",
+          "is_selected": true,
+          "description": "Table the stream comes from (MINERAL or COAL)."
+        },
+        {
+          "display_name": "StreamTypeCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Type of the stream: ORE MINED, ORE PROCESSED, CONCENTRATE or NM MINERAL for mineral rows, COAL MINED or CLEAN COAL for coal rows."
+        },
+        {
+          "display_name": "ReportingPeriod",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Period in which the stream occurred; relates to the year in which the period ends."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which the reporting period ends."
+        },
+        {
+          "display_name": "ValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of the stream, in tonnes."
+        },
+        {
+          "display_name": "AmountSoldTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of output material sold, in tonnes."
+        },
+        {
+          "display_name": "StreamTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of the streams, in tonnes. Streams of different types (for example ore mined and concentrate) overlap, so report by stream type. TODO(confirm with the business)"
+        },
+        {
+          "display_name": "StreamAmountSoldTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of output material sold, in tonnes."
+        }
+      ]
+    },
+    {
+      "display_name": "FactReserve",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility, year and material with the reported reserves. Grain = MaterialReserve_BK.",
+      "children": [
+        {
+          "display_name": "MaterialReserve_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the reserve record from the source."
+        },
+        {
+          "display_name": "ReserveYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year to which the reserves relate."
+        },
+        {
+          "display_name": "MineralValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of material reserves, in tonnes."
+        },
+        {
+          "display_name": "CommodityValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of the commodity contained in the material reserves, in tonnes."
+        },
+        {
+          "display_name": "GradePartsPerMillion",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Grade of the material reserves relating to the stated commodity, in parts per million."
+        },
+        {
+          "display_name": "MineralReserveTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of material reserves, in tonnes."
+        },
+        {
+          "display_name": "CommodityReserveTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of commodity contained in the reserves, in tonnes."
+        },
+        {
+          "display_name": "ReserveGradePartsPerMillionAverage",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Simple average grade in parts per million over the records, not weighted by tonnes."
+        }
+      ]
+    },
+    {
+      "display_name": "FactTransport",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility, year and transported product with the destination and mode of transport. Grain = TransportFlow_BK. Products that match no material are linked to the unknown member (-1). TODO(165 of 941 product values have no match in DimMaterial).",
+      "children": [
+        {
+          "display_name": "TransportFlow_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the transport record from the source."
+        },
+        {
+          "display_name": "TransportTo",
+          "type": "semantic_model.column",
+          "data_type": "varchar(150)",
+          "is_selected": true,
+          "description": "Destination of the transport."
+        },
+        {
+          "display_name": "TransportBy",
+          "type": "semantic_model.column",
+          "data_type": "varchar(60)",
+          "is_selected": true,
+          "description": "Mode of transport."
+        },
+        {
+          "display_name": "ExportTo",
+          "type": "semantic_model.column",
+          "data_type": "varchar(200)",
+          "is_selected": true,
+          "description": "Destination of the exported product."
+        },
+        {
+          "display_name": "ReportingPeriod",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Period in which the stream occurred; relates to the year in which the period ends."
+        },
+        {
+          "display_name": "IsExport",
+          "type": "semantic_model.column",
+          "data_type": "bit",
+          "is_selected": true,
+          "description": "True when the material is exported. Null when not stated."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which the reporting period ends."
+        },
+        {
+          "display_name": "ValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of the transported product, in tonnes."
+        },
+        {
+          "display_name": "TransportTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of transported product, in tonnes."
+        }
+      ]
+    },
+    {
+      "display_name": "FactWaste",
+      "type": "semantic_model.table",
+      "is_selected": true,
+      "description": "One row per facility, year and waste stream. Grain = WasteStream_BK. Most rows have no material, commodity or source, so those keys are -1.",
+      "children": [
+        {
+          "display_name": "WasteStream_BK",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Unique ID of the waste record from the source."
+        },
+        {
+          "display_name": "MiningMethodCode",
+          "type": "semantic_model.column",
+          "data_type": "varchar(20)",
+          "is_selected": true,
+          "description": "Mining method of the material to which the waste relates. Values in the data are SURFACE and UNDERGROUND. Null when not stated."
+        },
+        {
+          "display_name": "WasteType",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Type of waste."
+        },
+        {
+          "display_name": "ReportingPeriod",
+          "type": "semantic_model.column",
+          "data_type": "varchar(30)",
+          "is_selected": true,
+          "description": "Period in which the stream occurred; relates to the year in which the period ends."
+        },
+        {
+          "display_name": "ReportingYear",
+          "type": "semantic_model.column",
+          "data_type": "int",
+          "is_selected": true,
+          "description": "Year in which the reporting period ends."
+        },
+        {
+          "display_name": "ValueTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Mass of waste, in tonnes."
+        },
+        {
+          "display_name": "TotalMaterialTonnes",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Total material extracted of a mine, that is ore mined plus waste mined, in tonnes."
+        },
+        {
+          "display_name": "StrippingRatio",
+          "type": "semantic_model.column",
+          "data_type": "decimal(18,4)",
+          "is_selected": true,
+          "description": "Ratio of how much overburden is removed for each unit of ore mined."
+        },
+        {
+          "display_name": "WasteTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total mass of waste, in tonnes."
+        },
+        {
+          "display_name": "TotalMaterialTonnesTotal",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Total material extracted (ore plus waste), in tonnes."
+        },
+        {
+          "display_name": "StrippingRatioAverage",
+          "type": "semantic_model.measure",
+          "is_selected": true,
+          "description": "Simple average stripping ratio over the records, not weighted by tonnes."
+        }
+      ]
+    }
+  ]
+}

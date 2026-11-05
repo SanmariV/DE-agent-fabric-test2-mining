@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/fewShots/1.0.0/schema.json",
+  "fewShots": [
+    {
+      "id": "821a366a-65ff-5abb-a0e6-84c0d00391a0",
+      "question": "How many tonnes of ore were mined per year?",
+      "query": "select FactMaterialStream.ReportingYear,\n    sum(FactMaterialStream.ValueTonnes) as OreMinedTonnes\nfrom [production].[FactMaterialStream] as FactMaterialStream\nwhere FactMaterialStream.StreamTypeCode = 'ORE MINED'\ngroup by FactMaterialStream.ReportingYear"
+    },
+    {
+      "id": "614fe053-7900-589c-bb11-308e85d07682",
+      "question": "Which countries have the most facilities?",
+      "query": "select top 10 DimFacility.Country,\n    count(DimFacility.Facility_BK) as FacilityCount\nfrom [facilities].[DimFacility] as DimFacility\nwhere DimFacility.DimFacility_SK <> -1\ngroup by DimFacility.Country\norder by count(DimFacility.Facility_BK) desc"
+    },
+    {
+      "id": "178b3f55-b7d1-59ff-87f4-a5cbb7bfddf6",
+      "question": "What was the total waste per mining method in the latest year?",
+      "query": "select FactWaste.MiningMethodCode,\n    FactWaste.ReportingYear,\n    sum(FactWaste.ValueTonnes) as WasteTonnes\nfrom [production].[FactWaste] as FactWaste\nwhere FactWaste.ReportingYear = (\n    select max(LatestWaste.ReportingYear)\n    from [production].[FactWaste] as LatestWaste\n)\ngroup by FactWaste.MiningMethodCode, FactWaste.ReportingYear"
+    },
+    {
+      "id": "450ec282-0414-5620-b32b-d6678211b14a",
+      "question": "How many tonnes were transported by each mode of transport?",
+      "query": "select FactTransport.TransportBy,\n    sum(FactTransport.ValueTonnes) as TransportTonnes\nfrom [production].[FactTransport] as FactTransport\ngroup by FactTransport.TransportBy"
+    },
+    {
+      "id": "17729ce0-5d3a-58f1-8562-cb2e892e68c5",
+      "question": "Which materials have the largest reserves?",
+      "query": "select top 10 DimMaterial.MaterialName,\n    sum(FactReserve.MineralValueTonnes) as ReserveTonnes\nfrom [production].[FactReserve] as FactReserve\ninner join [production].[DimMaterial] as DimMaterial\n    on DimMaterial.DimMaterial_SK = FactReserve.DimMaterial_SK\ngroup by DimMaterial.MaterialName\norder by sum(FactReserve.MineralValueTonnes) desc"
+    },
+    {
+      "id": "3cc42078-7fdb-5d8f-b8ac-82c8f62ff809",
+      "question": "Who owns and operates each facility?",
+      "query": "select top 20 DimFacility.FacilityName,\n    FactFacilityOwnership.OwnershipYear,\n    FactFacilityOwnership.Owners,\n    FactFacilityOwnership.Operators\nfrom [facilities].[FactFacilityOwnership] as FactFacilityOwnership\ninner join [facilities].[DimFacility] as DimFacility\n    on DimFacility.DimFacility_SK = FactFacilityOwnership.DimFacility_SK"
+    }
+  ]
+}

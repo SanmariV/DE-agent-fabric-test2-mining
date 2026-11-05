@@ -1,0 +1,57 @@
+description: >
+  One row per facility and reporting year with the mass mined, processed,
+  concentrated and wasted. Grain = FacilityYear_BK.
+  TODO(confirm that tonnes may be summed across different materials of one
+  facility and year; the data cannot answer this).
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: FacilityYear_BK
+    data_type: varchar(30)
+    business_key: true
+    description: Facility key and reporting year joined with a hyphen, for example F123-2019.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility (-1 unknown).
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: OreMinedTonnes
+    data_type: decimal(28,4)
+    description: Sum of ore mined over all materials in the year, in tonnes. Null when no ore mined row exists.
+  - name: OreProcessedTonnes
+    data_type: decimal(28,4)
+    description: Sum of ore processed over all materials in the year, in tonnes. Null when no ore processed row exists.
+  - name: ConcentrateTonnes
+    data_type: decimal(28,4)
+    description: Sum of concentrate over all materials in the year, in tonnes. Null when no concentrate row exists.
+  - name: WasteTonnes
+    data_type: decimal(28,4)
+    description: Sum of waste over all waste streams in the year, in tonnes. Null when no waste row exists.
+measures:
+  - name: OreMinedTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(OreMinedTonnes)
+    description: Total ore mined, in tonnes. TODO(confirm with the business)
+    format: "#,0.00"
+  - name: OreProcessedTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(OreProcessedTonnes)
+    description: Total ore processed, in tonnes. TODO(confirm with the business)
+    format: "#,0.00"
+  - name: ConcentrateTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(ConcentrateTonnes)
+    description: Total concentrate produced, in tonnes. TODO(confirm with the business)
+    format: "#,0.00"
+  - name: FacilityYearWasteTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(WasteTonnes)
+    description: Total waste, in tonnes. TODO(confirm with the business)
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

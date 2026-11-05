@@ -1,0 +1,30 @@
+description: >
+  One row per facility and reporting year with the mass mined, processed,
+  concentrated and wasted. Grain = FacilityYear_BK (Facility_BK + ReportingYear).
+  TODO(confirm that tonnes may be summed across different materials of one
+  facility and year; the data cannot answer this).
+columns:
+  - name: FacilityYear_BK
+    data_type: string
+    business_key: true
+    description: Facility key and reporting year joined with a hyphen, for example F123-2019.
+  - name: Facility_BK
+    data_type: string
+    description: Facility; key of Facility.
+  - name: OreMinedTonnes
+    data_type: decimal(28,4)
+    description: Sum of ore mined over all materials in the year, in tonnes. Null when no ore mined row exists.
+  - name: OreProcessedTonnes
+    data_type: decimal(28,4)
+    description: Sum of ore processed over all materials in the year, in tonnes. Null when no ore processed row exists.
+  - name: ConcentrateTonnes
+    data_type: decimal(28,4)
+    description: Sum of concentrate over all materials in the year, in tonnes. Null when no concentrate row exists.
+  - name: WasteTonnes
+    data_type: decimal(28,4)
+    description: Sum of waste over all waste streams in the year, in tonnes. Null when no waste row exists.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

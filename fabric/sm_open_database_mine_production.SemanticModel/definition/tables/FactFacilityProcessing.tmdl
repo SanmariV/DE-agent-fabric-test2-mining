@@ -1,0 +1,162 @@
+/// One row per facility, year, input material and output material of a processing step. Grain = FacilityProcessing_BK. Input and output materials are free text and are not linked to DimMaterial. TODO(confirm how input and output text values map to DimMaterial).
+table FactFacilityProcessing
+	lineageTag: 76e39405-0d0a-5512-aa03-9945842e31a7
+	sourceLineageTag: [production].[FactFacilityProcessing]
+
+	/// Total mass of input materials, in tonnes.
+	measure InputTonnesTotal = SUM('FactFacilityProcessing'[InputValueTonnes])
+		formatString: #,0.00
+		lineageTag: 18e66f0e-c512-559b-9b13-20fa6221ab88
+
+	/// Total mass of output materials, in tonnes.
+	measure OutputTonnesTotal = SUM('FactFacilityProcessing'[OutputValueTonnes])
+		formatString: #,0.00
+		lineageTag: 7ab6e77d-a4b7-57c3-a9ec-6e4a6c57a3e0
+
+	/// Total mass of output material sold, in tonnes.
+	measure ProcessingAmountSoldTonnesTotal = SUM('FactFacilityProcessing'[AmountSoldTonnes])
+		formatString: #,0.00
+		lineageTag: a3ba9aea-24c2-5662-bf45-5c32597b2ee9
+
+	/// Total payable metal, in tonnes.
+	measure ProcessingMetalPayableTonnesTotal = SUM('FactFacilityProcessing'[MetalPayableTonnes])
+		formatString: #,0.00
+		lineageTag: 921effc3-c1a0-5f6a-8dd8-1646fbb8ec43
+
+	/// Simple average recovery rate over the records, not weighted by tonnes.
+	measure ProcessingRecoveryRateAverage = AVERAGE('FactFacilityProcessing'[RecoveryRate])
+		formatString: 0.0000
+		lineageTag: 3d087ada-cf73-53c9-86a3-d29a372f7a87
+
+	/// Surrogate key of FactFacilityProcessing.
+	column FactFacilityProcessing_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b49bc905-394a-5d1c-98ca-9fde93090b58
+		summarizeBy: none
+		sourceColumn: FactFacilityProcessing_SK
+
+	/// Unique ID of the processing record from the source.
+	column FacilityProcessing_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f1e77bf-d7c2-5d70-9478-b5fac9fcdd9a
+		summarizeBy: none
+		sourceColumn: FacilityProcessing_BK
+
+	/// Processing facility (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: c3f2a5eb-84e3-5390-ba54-c9fd2e219aef
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2cf58cbe-d01e-5d0f-b138-e44d67df31ca
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Type of processing facility, for example Refinery or Smelter.
+	column FacilityType
+		dataType: string
+		lineageTag: a198e9ce-60b0-536e-9bd6-a1955592bef3
+		summarizeBy: none
+		sourceColumn: FacilityType
+
+	/// Input materials, as free text.
+	column InputMaterial
+		dataType: string
+		lineageTag: 230a4ce6-ef50-5d30-887f-5cd5acecd24c
+		summarizeBy: none
+		sourceColumn: InputMaterial
+
+	/// Output materials, as free text.
+	column OutputMaterial
+		dataType: string
+		lineageTag: e7f09d1a-c8e4-516e-8cad-2f5133eeb318
+		summarizeBy: none
+		sourceColumn: OutputMaterial
+
+	/// Period in which the stream occurred; relates to the year in which the period ends.
+	column ReportingPeriod
+		dataType: string
+		lineageTag: df41210a-cff2-5b49-8afb-2b8bcfc24a2d
+		summarizeBy: none
+		sourceColumn: ReportingPeriod
+
+	/// True when third-party material is included in the processing at a mine with an on-site processing facility. Null when not stated.
+	column HasPurchasedMaterial
+		dataType: boolean
+		lineageTag: 009da129-e616-56b1-9f4e-4c23b313f32d
+		summarizeBy: none
+		sourceColumn: HasPurchasedMaterial
+
+	/// Year in which the reporting period ends.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b0a48c4-53b4-53a7-ac3b-ed31e9a38934
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Mass of input materials, in tonnes.
+	column InputValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 8d845b78-82a6-51da-8a75-6f6b7887ad42
+		summarizeBy: none
+		sourceColumn: InputValueTonnes
+
+	/// Mass of output materials, in tonnes.
+	column OutputValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: cc086f89-eef5-56e7-9d52-7a5a306c07df
+		summarizeBy: none
+		sourceColumn: OutputValueTonnes
+
+	/// Grade of the material, in parts per million.
+	column GradePartsPerMillion
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 3656b397-9254-542b-840a-07b076759a42
+		summarizeBy: none
+		sourceColumn: GradePartsPerMillion
+
+	/// Share of output material recovered from the output material contained in the input material.
+	column RecoveryRate
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 9cd00bf7-7813-5caf-9127-a190da521064
+		summarizeBy: none
+		sourceColumn: RecoveryRate
+
+	/// Mass of output material sold, in tonnes.
+	column AmountSoldTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: cff7f641-880c-503c-b0af-1fb8395d9a35
+		summarizeBy: none
+		sourceColumn: AmountSoldTonnes
+
+	/// Mass of output material contained in the input material after the operator's deduction, in tonnes. Null when the bronze text is not a number.
+	column MetalPayableTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: b8932ded-df2c-5539-ad0b-db33e1c5b261
+		summarizeBy: none
+		sourceColumn: MetalPayableTonnes
+
+	partition FactFacilityProcessing = entity
+		mode: directLake
+		source
+			entityName: FactFacilityProcessing
+			schemaName: production
+			expressionSource: DatabaseQuery

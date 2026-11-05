@@ -1,0 +1,111 @@
+/// One row per facility, year and transported product with the destination and mode of transport. Grain = TransportFlow_BK. Products that match no material are linked to the unknown member (-1). TODO(165 of 941 product values have no match in DimMaterial).
+table FactTransport
+	lineageTag: 2548ffac-50f4-5258-8fdb-e5526b4fb266
+	sourceLineageTag: [production].[FactTransport]
+
+	/// Total mass of transported product, in tonnes.
+	measure TransportTonnesTotal = SUM('FactTransport'[ValueTonnes])
+		formatString: #,0.00
+		lineageTag: 229788d0-cbed-5160-86d4-884188a01226
+
+	/// Surrogate key of FactTransport.
+	column FactTransport_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 95634274-5f1d-5234-9930-3d44e0becf90
+		summarizeBy: none
+		sourceColumn: FactTransport_SK
+
+	/// Unique ID of the transport record from the source.
+	column TransportFlow_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: cec7fd80-4b35-5554-b401-f38b1cfd1745
+		summarizeBy: none
+		sourceColumn: TransportFlow_BK
+
+	/// Facility the product is transported from (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: c4d1d098-313b-5c7c-b57c-da7db4977d80
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Specific material transported (-1 unknown or no match).
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9dfb435c-618f-585c-8eb1-f8d06cbd23ce
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 00b30964-102c-5797-8642-a77f07ae25b1
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Destination of the transport.
+	column TransportTo
+		dataType: string
+		lineageTag: 65a391fb-ac75-596b-a839-eac688686359
+		summarizeBy: none
+		sourceColumn: TransportTo
+
+	/// Mode of transport.
+	column TransportBy
+		dataType: string
+		lineageTag: a52d5971-eb1c-5e07-b171-b539de58f3b4
+		summarizeBy: none
+		sourceColumn: TransportBy
+
+	/// Destination of the exported product.
+	column ExportTo
+		dataType: string
+		lineageTag: 006a7177-bfc4-5726-9e25-5e42daa986ab
+		summarizeBy: none
+		sourceColumn: ExportTo
+
+	/// Period in which the stream occurred; relates to the year in which the period ends.
+	column ReportingPeriod
+		dataType: string
+		lineageTag: 1842ef18-da53-5307-9ca0-34bcf68d80f5
+		summarizeBy: none
+		sourceColumn: ReportingPeriod
+
+	/// True when the material is exported. Null when not stated.
+	column IsExport
+		dataType: boolean
+		lineageTag: 3db7e5ba-f0bb-5ddf-b515-0c5ba9ebbf31
+		summarizeBy: none
+		sourceColumn: IsExport
+
+	/// Year in which the reporting period ends.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 9710f992-7d3d-575c-801f-7fbb57864a98
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Mass of the transported product, in tonnes.
+	column ValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 0095152b-d1b0-51b1-8b4e-5b0d4d4c5f07
+		summarizeBy: none
+		sourceColumn: ValueTonnes
+
+	partition FactTransport = entity
+		mode: directLake
+		source
+			entityName: FactTransport
+			schemaName: production
+			expressionSource: DatabaseQuery

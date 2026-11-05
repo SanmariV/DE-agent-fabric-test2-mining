@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_silver_dbo_facility_processing",
+    "description": "Silver load of dbo.FacilityProcessing."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "026ae5a1-88c9-572c-ad9c-05b7e27d8063"
+  }
+}

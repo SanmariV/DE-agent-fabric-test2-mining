@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "sm_open_database_mine_production",
+    "description": "Direct Lake semantic model over the gold Warehouse."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "cef5cccb-2f7c-5997-8da6-5200e306ef78"
+  }
+}

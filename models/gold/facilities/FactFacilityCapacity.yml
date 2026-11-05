@@ -1,0 +1,50 @@
+description: >
+  One row per facility, year and material with the stated output or input
+  capacity in tonnes per year. Grain = FacilityCapacity_BK. Capacity is stated
+  either as input capacity of a material or as output capacity of a commodity.
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: FacilityCapacity_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the capacity record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility the capacity belongs to (-1 unknown).
+  - name: DimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Material whose input capacity is stated (-1 unknown or not stated).
+  - name: CommodityDimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Commodity whose output capacity is stated (-1 unknown or not stated).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: ReportingYear
+    data_type: int
+    description: Year to which the capacity relates.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: CapacityTonnesPerYear
+    data_type: decimal(18,4)
+    description: >
+      Mass of input or output capacity, in tonnes per year. Output capacity of
+      the commodity when a commodity is given, otherwise input capacity of the
+      material.
+measures:
+  - name: CapacityTonnesPerYearTotal
+    meta: {matrix: {unit: Tonnes per year}}
+    expression: sum(CapacityTonnesPerYear)
+    description: >
+      Total stated capacity, in tonnes per year. Input and output capacity of
+      the same facility are separate rows, so do not add them for one facility.
+      TODO(confirm with the business)
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

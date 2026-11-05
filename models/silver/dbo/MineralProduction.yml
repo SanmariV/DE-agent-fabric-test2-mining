@@ -1,0 +1,61 @@
+description: >
+  One row per facility, year, material and stream type (ore mined, ore
+  processed, concentrate, NM mineral). Grain = MineralProduction_BK (source row id).
+source: {source: dbo, table: minerals}
+load: {mode: full}
+columns:
+  - name: MineralProduction_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility producing the material; key of Facility.
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(material))
+    description: Material of the stream; key of Material.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: StreamTypeCode
+    data_type: string
+    expression: upper(trim(type))
+    description: Material category and type of the stream (ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL).
+    tests:
+      - accepted_values: {values: [ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL]}
+  - name: MineProcessing
+    data_type: string
+    expression: trim(mine_processing)
+    description: Type of leaching conducted at the mine, if any.
+  - name: ReportingPeriod
+    data_type: string
+    expression: coalesce(trim(reporting_period), 'January-December')
+    description: >
+      Period in which the stream occurred. Always relates to the year in which
+      the period ends. January-December when not specified in the source.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(value_tonnes as decimal(18,4))
+    description: Mass of the stream, in tonnes.
+  - name: OverallGradePartsPerMillion
+    data_type: decimal(18,4)
+    expression: cast(overall_grade_ppm as decimal(18,4))
+    description: Overall grade of all commodities contained in the ore or concentrate combined, in parts per million.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    expression: cast(amount_sold_tonnes as decimal(18,4))
+    description: Mass of output material sold, in tonnes.
+  - name: ReportingYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

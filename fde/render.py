@@ -588,8 +588,10 @@ def gold_table_sql(project: Project, model: Model) -> str:
               "-- migration (see the standards, section 7.5)."]
     for name, data_type, nullable in cols:
         if nullable:
-            lines += [f"IF COL_LENGTH('{model.schema}.{model.name}', "
-                      f"'{name}') IS NULL",
+            lines += ["IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS",
+                      f"               WHERE TABLE_SCHEMA = '{model.schema}'",
+                      f"               AND TABLE_NAME = '{model.name}'",
+                      f"               AND COLUMN_NAME = '{name}')",
                       f"    ALTER TABLE {rel} ADD {_q(name)} {data_type} NULL;"]
     lines += ["GO", "",
               "-- Informational key (Fabric does not enforce it; the tests do).",

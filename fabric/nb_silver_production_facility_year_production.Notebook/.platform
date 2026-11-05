@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_silver_production_facility_year_production",
+    "description": "Silver load of production.FacilityYearProduction."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c6cf16a1-f07a-5212-a94b-96b5d2952a40"
+  }
+}

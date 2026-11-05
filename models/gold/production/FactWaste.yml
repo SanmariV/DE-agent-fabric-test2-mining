@@ -1,0 +1,70 @@
+description: >
+  One row per facility, year and waste stream. Grain = WasteStream_BK.
+  Most rows have no material, commodity or source, so those keys are -1.
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: WasteStream_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the waste record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility producing the waste (-1 unknown).
+  - name: DimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Material to which the waste stream relates (-1 unknown or not stated).
+  - name: CommodityDimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Commodity to which the waste stream relates (-1 unknown or not stated).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: MiningMethodCode
+    data_type: varchar(20)
+    description: >
+      Mining method of the material to which the waste relates. Values in the
+      data are SURFACE and UNDERGROUND. Null when not stated.
+  - name: WasteType
+    data_type: varchar(30)
+    description: Type of waste.
+  - name: ReportingPeriod
+    data_type: varchar(30)
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of waste, in tonnes.
+  - name: TotalMaterialTonnes
+    data_type: decimal(18,4)
+    description: Total material extracted of a mine, that is ore mined plus waste mined, in tonnes.
+  - name: StrippingRatio
+    data_type: decimal(18,4)
+    description: Ratio of how much overburden is removed for each unit of ore mined.
+measures:
+  - name: WasteTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(ValueTonnes)
+    description: Total mass of waste, in tonnes.
+    format: "#,0.00"
+  - name: TotalMaterialTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(TotalMaterialTonnes)
+    description: Total material extracted (ore plus waste), in tonnes.
+    format: "#,0.00"
+  - name: StrippingRatioAverage
+    meta: {matrix: {unit: Ratio}}
+    expression: avg(StrippingRatio)
+    description: Simple average stripping ratio over the records, not weighted by tonnes.
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

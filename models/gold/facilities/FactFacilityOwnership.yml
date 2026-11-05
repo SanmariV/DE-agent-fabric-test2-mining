@@ -1,0 +1,39 @@
+description: >
+  One row per facility and year with the owners (and their ownership shares)
+  and the operators. Grain = FacilityOwnership_BK. Owners and operators are
+  kept as text and are not split into one row per owner.
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: FacilityOwnership_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the ownership record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility that is owned and operated (-1 unknown).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: OwnershipYear
+    data_type: int
+    description: Year for which the ownership shares and operator apply.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: Owners
+    data_type: varchar(400)
+    description: Owners of the facility, with their ownership share in brackets.
+  - name: Operators
+    data_type: varchar(300)
+    description: Operators of the facility.
+measures:
+  - name: OwnershipRecordCount
+    meta: {matrix: {unit: Count}}
+    expression: count(FacilityOwnership_BK)
+    description: Number of ownership records (one per facility and year). TODO(confirm with the business)
+    format: "#,0"
+tests:
+  - row_count_between: {min: 1, severity: warn}

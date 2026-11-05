@@ -1,0 +1,111 @@
+/// One row per facility, year and material with the reported reserves. Grain = MaterialReserve_BK.
+table FactReserve
+	lineageTag: 7189f19a-a7bf-5a3c-a4c5-0f9ad1c31444
+	sourceLineageTag: [production].[FactReserve]
+
+	/// Total mass of material reserves, in tonnes.
+	measure MineralReserveTonnesTotal = SUM('FactReserve'[MineralValueTonnes])
+		formatString: #,0.00
+		lineageTag: cff7ef5e-1433-568b-9488-ebe2641dc5ed
+
+	/// Total mass of commodity contained in the reserves, in tonnes.
+	measure CommodityReserveTonnesTotal = SUM('FactReserve'[CommodityValueTonnes])
+		formatString: #,0.00
+		lineageTag: f22fca4b-3af6-59ac-bc70-38e462c861aa
+
+	/// Simple average grade in parts per million over the records, not weighted by tonnes.
+	measure ReserveGradePartsPerMillionAverage = AVERAGE('FactReserve'[GradePartsPerMillion])
+		formatString: #,0.00
+		lineageTag: 928ba5df-f5a6-535c-b72d-adf7d90ef332
+
+	/// Surrogate key of FactReserve.
+	column FactReserve_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9b73ef88-edf4-5cf7-90b3-abb5c29512f7
+		summarizeBy: none
+		sourceColumn: FactReserve_SK
+
+	/// Unique ID of the reserve record from the source.
+	column MaterialReserve_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: f8e6896c-4778-5482-8d82-c08a8afb0409
+		summarizeBy: none
+		sourceColumn: MaterialReserve_BK
+
+	/// Facility holding the reserves (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 15f88143-bc0a-52bd-b820-258388fb8fac
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Material of the reserves (-1 unknown).
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: a29bceef-378b-5ebf-8fd8-6d589c3bfbd7
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// Commodity contained in the reserves (-1 unknown or not stated).
+	column CommodityDimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: d3cbc515-4657-5304-9eb9-812973a642fa
+		summarizeBy: none
+		sourceColumn: CommodityDimMaterial_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 686059a0-96c5-54c8-9c50-6004fbafe0e0
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Year to which the reserves relate.
+	column ReserveYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 84389f7c-5c2b-5e2e-b1b1-7572e0c6165b
+		summarizeBy: none
+		sourceColumn: ReserveYear
+
+	/// Mass of material reserves, in tonnes.
+	column MineralValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 85a03657-9cac-5c6d-b495-75e24f01fb80
+		summarizeBy: none
+		sourceColumn: MineralValueTonnes
+
+	/// Mass of the commodity contained in the material reserves, in tonnes.
+	column CommodityValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 56dbce4d-6a6a-54a4-b019-19bf6baf44a7
+		summarizeBy: none
+		sourceColumn: CommodityValueTonnes
+
+	/// Grade of the material reserves relating to the stated commodity, in parts per million.
+	column GradePartsPerMillion
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: f5d0dec0-e770-5f84-90a2-ba2fc6a0499b
+		summarizeBy: none
+		sourceColumn: GradePartsPerMillion
+
+	partition FactReserve = entity
+		mode: directLake
+		source
+			entityName: FactReserve
+			schemaName: production
+			expressionSource: DatabaseQuery

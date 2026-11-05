@@ -1,0 +1,73 @@
+/// One row per facility and year with the owners (and their ownership shares) and the operators. Grain = FacilityOwnership_BK. Owners and operators are kept as text and are not split into one row per owner.
+table FactFacilityOwnership
+	lineageTag: 42b4cd3e-faa8-5c0c-a43a-8d4af73e7f3a
+	sourceLineageTag: [facilities].[FactFacilityOwnership]
+
+	/// Number of ownership records (one per facility and year). TODO(confirm with the business)
+	measure OwnershipRecordCount = COUNT('FactFacilityOwnership'[FacilityOwnership_BK])
+		formatString: #,0
+		lineageTag: 9705b89b-28c3-5af3-99fe-774f303e7cd6
+
+	/// Surrogate key of FactFacilityOwnership.
+	column FactFacilityOwnership_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 7a9cb0c1-2d28-5b1e-a4b8-cb46dcd30d0e
+		summarizeBy: none
+		sourceColumn: FactFacilityOwnership_SK
+
+	/// Unique ID of the ownership record from the source.
+	column FacilityOwnership_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f474d2e-0e6b-5e3d-8f3b-bed5ea208491
+		summarizeBy: none
+		sourceColumn: FacilityOwnership_BK
+
+	/// Facility that is owned and operated (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 41181f34-a762-539b-b119-9c24f664214e
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b1baa4cd-faa5-555a-8b1d-f0f88eb6dbb9
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Year for which the ownership shares and operator apply.
+	column OwnershipYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e84320a-aca8-5ac9-826b-e37a46c20228
+		summarizeBy: none
+		sourceColumn: OwnershipYear
+
+	/// Owners of the facility, with their ownership share in brackets.
+	column Owners
+		dataType: string
+		lineageTag: bef30860-d185-5adc-a895-d5a28fc9d78b
+		summarizeBy: none
+		sourceColumn: Owners
+
+	/// Operators of the facility.
+	column Operators
+		dataType: string
+		lineageTag: b0d0f1ff-0c2f-5430-8909-971314739ca4
+		summarizeBy: none
+		sourceColumn: Operators
+
+	partition FactFacilityOwnership = entity
+		mode: directLake
+		source
+			entityName: FactFacilityOwnership
+			schemaName: facilities
+			expressionSource: DatabaseQuery

@@ -11,6 +11,1088 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    IF @Layer = 'silver'
+    BEGIN
+        -- dbo.CoalProduction: not_null__CoalProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CoalProduction', 'not_null__CoalProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CoalProduction_BK] from [lh_silver].[dbo].[coalproduction] where [CoalProduction_BK] is null) AS failing;
+        -- dbo.CoalProduction: unique__CoalProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CoalProduction', 'unique__CoalProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CoalProduction_BK] from [lh_silver].[dbo].[coalproduction] where [CoalProduction_BK] is not null group by [CoalProduction_BK] having count(*) > 1) AS failing;
+        -- dbo.CoalProduction: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CoalProduction', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[coalproduction] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- dbo.CommodityProduction: not_null__CommodityProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CommodityProduction', 'not_null__CommodityProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityProduction_BK] from [lh_silver].[dbo].[commodityproduction] where [CommodityProduction_BK] is null) AS failing;
+        -- dbo.CommodityProduction: unique__CommodityProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CommodityProduction', 'unique__CommodityProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityProduction_BK] from [lh_silver].[dbo].[commodityproduction] where [CommodityProduction_BK] is not null group by [CommodityProduction_BK] having count(*) > 1) AS failing;
+        -- dbo.CommodityProduction: relationships__MineralProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CommodityProduction', 'relationships__MineralProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[MineralProduction_BK] from [lh_silver].[dbo].[commodityproduction] as child left join [lh_silver].[dbo].[mineralproduction] as parent on child.[MineralProduction_BK] = parent.[MineralProduction_BK] where child.[MineralProduction_BK] is not null and parent.[MineralProduction_BK] is null) AS failing;
+        -- dbo.CommodityProduction: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.CommodityProduction', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[commodityproduction] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- dbo.DataSource: not_null__DataSource_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.DataSource', 'not_null__DataSource_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DataSource_BK] from [lh_silver].[dbo].[datasource] where [DataSource_BK] is null) AS failing;
+        -- dbo.DataSource: unique__DataSource_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.DataSource', 'unique__DataSource_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DataSource_BK] from [lh_silver].[dbo].[datasource] where [DataSource_BK] is not null group by [DataSource_BK] having count(*) > 1) AS failing;
+        -- dbo.Facility: not_null__Facility_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Facility', 'not_null__Facility_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Facility_BK] from [lh_silver].[dbo].[facility] where [Facility_BK] is null) AS failing;
+        -- dbo.Facility: unique__Facility_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Facility', 'unique__Facility_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Facility_BK] from [lh_silver].[dbo].[facility] where [Facility_BK] is not null group by [Facility_BK] having count(*) > 1) AS failing;
+        -- dbo.Facility: accepted_range__ProductionStartYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Facility', 'accepted_range__ProductionStartYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ProductionStartYear] from [lh_silver].[dbo].[facility] where [ProductionStartYear] < 1500 or [ProductionStartYear] > 2030) AS failing;
+        -- dbo.Facility: accepted_range__ProductionEndYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Facility', 'accepted_range__ProductionEndYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ProductionEndYear] from [lh_silver].[dbo].[facility] where [ProductionEndYear] < 1900 or [ProductionEndYear] > 2030) AS failing;
+        -- dbo.FacilityCapacity: not_null__FacilityCapacity_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityCapacity', 'not_null__FacilityCapacity_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityCapacity_BK] from [lh_silver].[dbo].[facilitycapacity] where [FacilityCapacity_BK] is null) AS failing;
+        -- dbo.FacilityCapacity: unique__FacilityCapacity_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityCapacity', 'unique__FacilityCapacity_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityCapacity_BK] from [lh_silver].[dbo].[facilitycapacity] where [FacilityCapacity_BK] is not null group by [FacilityCapacity_BK] having count(*) > 1) AS failing;
+        -- dbo.FacilityCapacity: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityCapacity', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[facilitycapacity] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- dbo.FacilityOwnership: not_null__FacilityOwnership_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityOwnership', 'not_null__FacilityOwnership_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityOwnership_BK] from [lh_silver].[dbo].[facilityownership] where [FacilityOwnership_BK] is null) AS failing;
+        -- dbo.FacilityOwnership: unique__FacilityOwnership_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityOwnership', 'unique__FacilityOwnership_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityOwnership_BK] from [lh_silver].[dbo].[facilityownership] where [FacilityOwnership_BK] is not null group by [FacilityOwnership_BK] having count(*) > 1) AS failing;
+        -- dbo.FacilityOwnership: accepted_range__OwnershipYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityOwnership', 'accepted_range__OwnershipYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [OwnershipYear] from [lh_silver].[dbo].[facilityownership] where [OwnershipYear] < 1990 or [OwnershipYear] > 2030) AS failing;
+        -- dbo.FacilityProcessing: not_null__FacilityProcessing_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityProcessing', 'not_null__FacilityProcessing_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityProcessing_BK] from [lh_silver].[dbo].[facilityprocessing] where [FacilityProcessing_BK] is null) AS failing;
+        -- dbo.FacilityProcessing: unique__FacilityProcessing_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityProcessing', 'unique__FacilityProcessing_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityProcessing_BK] from [lh_silver].[dbo].[facilityprocessing] where [FacilityProcessing_BK] is not null group by [FacilityProcessing_BK] having count(*) > 1) AS failing;
+        -- dbo.FacilityProcessing: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.FacilityProcessing', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[facilityprocessing] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- dbo.Material: not_null__Material_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Material', 'not_null__Material_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Material_BK] from [lh_silver].[dbo].[material] where [Material_BK] is null) AS failing;
+        -- dbo.Material: unique__Material_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Material', 'unique__Material_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Material_BK] from [lh_silver].[dbo].[material] where [Material_BK] is not null group by [Material_BK] having count(*) > 1) AS failing;
+        -- dbo.Material: accepted_values__MaterialCategoryCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.Material', 'accepted_values__MaterialCategoryCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialCategoryCode] from [lh_silver].[dbo].[material] where [MaterialCategoryCode] is not null and [MaterialCategoryCode] not in ('MINERAL', 'COMMODITY', 'OTHER_PRODUCT', 'FF_MINERAL', 'FF_COMMODITY', 'AGGREGATE')) AS failing;
+        -- dbo.MaterialReserve: not_null__MaterialReserve_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MaterialReserve', 'not_null__MaterialReserve_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialReserve_BK] from [lh_silver].[dbo].[materialreserve] where [MaterialReserve_BK] is null) AS failing;
+        -- dbo.MaterialReserve: unique__MaterialReserve_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MaterialReserve', 'unique__MaterialReserve_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialReserve_BK] from [lh_silver].[dbo].[materialreserve] where [MaterialReserve_BK] is not null group by [MaterialReserve_BK] having count(*) > 1) AS failing;
+        -- dbo.MaterialReserve: accepted_range__ReserveYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MaterialReserve', 'accepted_range__ReserveYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReserveYear] from [lh_silver].[dbo].[materialreserve] where [ReserveYear] < 1990 or [ReserveYear] > 2030) AS failing;
+        -- dbo.MineralProduction: not_null__MineralProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MineralProduction', 'not_null__MineralProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MineralProduction_BK] from [lh_silver].[dbo].[mineralproduction] where [MineralProduction_BK] is null) AS failing;
+        -- dbo.MineralProduction: unique__MineralProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MineralProduction', 'unique__MineralProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MineralProduction_BK] from [lh_silver].[dbo].[mineralproduction] where [MineralProduction_BK] is not null group by [MineralProduction_BK] having count(*) > 1) AS failing;
+        -- dbo.MineralProduction: accepted_values__StreamTypeCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MineralProduction', 'accepted_values__StreamTypeCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamTypeCode] from [lh_silver].[dbo].[mineralproduction] where [StreamTypeCode] is not null and [StreamTypeCode] not in ('ORE MINED', 'ORE PROCESSED', 'CONCENTRATE', 'NM MINERAL')) AS failing;
+        -- dbo.MineralProduction: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.MineralProduction', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[mineralproduction] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- dbo.TransportFlow: not_null__TransportFlow_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.TransportFlow', 'not_null__TransportFlow_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [TransportFlow_BK] from [lh_silver].[dbo].[transportflow] where [TransportFlow_BK] is null) AS failing;
+        -- dbo.TransportFlow: unique__TransportFlow_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.TransportFlow', 'unique__TransportFlow_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [TransportFlow_BK] from [lh_silver].[dbo].[transportflow] where [TransportFlow_BK] is not null group by [TransportFlow_BK] having count(*) > 1) AS failing;
+        -- dbo.TransportFlow: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.TransportFlow', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[transportflow] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- dbo.WasteStream: not_null__WasteStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.WasteStream', 'not_null__WasteStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [WasteStream_BK] from [lh_silver].[dbo].[wastestream] where [WasteStream_BK] is null) AS failing;
+        -- dbo.WasteStream: unique__WasteStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.WasteStream', 'unique__WasteStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [WasteStream_BK] from [lh_silver].[dbo].[wastestream] where [WasteStream_BK] is not null group by [WasteStream_BK] having count(*) > 1) AS failing;
+        -- dbo.WasteStream: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'dbo.WasteStream', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[dbo].[wastestream] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.CommodityOutput: not_null__CommodityProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.CommodityOutput', 'not_null__CommodityProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityProduction_BK] from [lh_silver].[production].[commodityoutput] where [CommodityProduction_BK] is null) AS failing;
+        -- production.CommodityOutput: unique__CommodityProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.CommodityOutput', 'unique__CommodityProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityProduction_BK] from [lh_silver].[production].[commodityoutput] where [CommodityProduction_BK] is not null group by [CommodityProduction_BK] having count(*) > 1) AS failing;
+        -- production.CommodityOutput: accepted_values__StreamTypeCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.CommodityOutput', 'accepted_values__StreamTypeCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamTypeCode] from [lh_silver].[production].[commodityoutput] where [StreamTypeCode] is not null and [StreamTypeCode] not in ('ORE MINED', 'ORE PROCESSED', 'CONCENTRATE', 'NM MINERAL')) AS failing;
+        -- production.CommodityOutput: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.CommodityOutput', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[production].[commodityoutput] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FacilityYearProduction: not_null__FacilityYear_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.FacilityYearProduction', 'not_null__FacilityYear_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityYear_BK] from [lh_silver].[production].[facilityyearproduction] where [FacilityYear_BK] is null) AS failing;
+        -- production.FacilityYearProduction: unique__FacilityYear_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.FacilityYearProduction', 'unique__FacilityYear_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityYear_BK] from [lh_silver].[production].[facilityyearproduction] where [FacilityYear_BK] is not null group by [FacilityYear_BK] having count(*) > 1) AS failing;
+        -- production.FacilityYearProduction: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.FacilityYearProduction', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[production].[facilityyearproduction] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.MaterialStream: not_null__MaterialStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.MaterialStream', 'not_null__MaterialStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialStream_BK] from [lh_silver].[production].[materialstream] where [MaterialStream_BK] is null) AS failing;
+        -- production.MaterialStream: unique__MaterialStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.MaterialStream', 'unique__MaterialStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialStream_BK] from [lh_silver].[production].[materialstream] where [MaterialStream_BK] is not null group by [MaterialStream_BK] having count(*) > 1) AS failing;
+        -- production.MaterialStream: accepted_values__StreamSourceCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.MaterialStream', 'accepted_values__StreamSourceCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamSourceCode] from [lh_silver].[production].[materialstream] where [StreamSourceCode] is not null and [StreamSourceCode] not in ('MINERAL', 'COAL')) AS failing;
+        -- production.MaterialStream: accepted_values__StreamTypeCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.MaterialStream', 'accepted_values__StreamTypeCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamTypeCode] from [lh_silver].[production].[materialstream] where [StreamTypeCode] is not null and [StreamTypeCode] not in ('ORE MINED', 'ORE PROCESSED', 'CONCENTRATE', 'NM MINERAL', 'COAL MINED', 'CLEAN COAL')) AS failing;
+        -- production.MaterialStream: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'silver', 'production.MaterialStream', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [lh_silver].[production].[materialstream] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+    END;
+
+    IF @Layer = 'gold'
+    BEGIN
+        -- facilities.DimDataSource: not_null__DataSource_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimDataSource', 'not_null__DataSource_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DataSource_BK] from [facilities].[DimDataSource] where [DataSource_BK] is null) AS failing;
+        -- facilities.DimDataSource: unique__DataSource_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimDataSource', 'unique__DataSource_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DataSource_BK] from [facilities].[DimDataSource] where [DataSource_BK] is not null group by [DataSource_BK] having count(*) > 1) AS failing;
+        -- facilities.DimDataSource: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimDataSource', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [facilities].[DimDataSource] where [DimDataSource_SK] is null) AS failing;
+        -- facilities.DimDataSource: unique__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimDataSource', 'unique__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [facilities].[DimDataSource] where [DimDataSource_SK] is not null group by [DimDataSource_SK] having count(*) > 1) AS failing;
+        -- facilities.DimDataSource: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimDataSource', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [facilities].[DimDataSource]) as counted where row_count < 1) AS failing;
+        -- facilities.DimFacility: not_null__Facility_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'not_null__Facility_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Facility_BK] from [facilities].[DimFacility] where [Facility_BK] is null) AS failing;
+        -- facilities.DimFacility: unique__Facility_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'unique__Facility_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Facility_BK] from [facilities].[DimFacility] where [Facility_BK] is not null group by [Facility_BK] having count(*) > 1) AS failing;
+        -- facilities.DimFacility: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [facilities].[DimFacility] where [DimFacility_SK] is null) AS failing;
+        -- facilities.DimFacility: unique__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'unique__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [facilities].[DimFacility] where [DimFacility_SK] is not null group by [DimFacility_SK] having count(*) > 1) AS failing;
+        -- facilities.DimFacility: accepted_range__ProductionStartYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'accepted_range__ProductionStartYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ProductionStartYear] from [facilities].[DimFacility] where [ProductionStartYear] < 1500 or [ProductionStartYear] > 2030) AS failing;
+        -- facilities.DimFacility: accepted_range__ProductionEndYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'accepted_range__ProductionEndYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ProductionEndYear] from [facilities].[DimFacility] where [ProductionEndYear] < 1900 or [ProductionEndYear] > 2030) AS failing;
+        -- facilities.DimFacility: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.DimFacility', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [facilities].[DimFacility]) as counted where row_count < 1) AS failing;
+        -- facilities.FactFacilityCapacity: not_null__FacilityCapacity_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'not_null__FacilityCapacity_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityCapacity_BK] from [facilities].[FactFacilityCapacity] where [FacilityCapacity_BK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: unique__FacilityCapacity_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'unique__FacilityCapacity_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityCapacity_BK] from [facilities].[FactFacilityCapacity] where [FacilityCapacity_BK] is not null group by [FacilityCapacity_BK] having count(*) > 1) AS failing;
+        -- facilities.FactFacilityCapacity: not_null__FactFacilityCapacity_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'not_null__FactFacilityCapacity_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityCapacity_SK] from [facilities].[FactFacilityCapacity] where [FactFacilityCapacity_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: unique__FactFacilityCapacity_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'unique__FactFacilityCapacity_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityCapacity_SK] from [facilities].[FactFacilityCapacity] where [FactFacilityCapacity_SK] is not null group by [FactFacilityCapacity_SK] having count(*) > 1) AS failing;
+        -- facilities.FactFacilityCapacity: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [facilities].[FactFacilityCapacity] where [DimFacility_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [facilities].[FactFacilityCapacity] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [facilities].[FactFacilityCapacity] where [DimMaterial_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: relationships__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'relationships__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimMaterial_SK] from [facilities].[FactFacilityCapacity] as child left join [production].[DimMaterial] as parent on child.[DimMaterial_SK] = parent.[DimMaterial_SK] where child.[DimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: not_null__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'not_null__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityDimMaterial_SK] from [facilities].[FactFacilityCapacity] where [CommodityDimMaterial_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: relationships__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'relationships__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[CommodityDimMaterial_SK] from [facilities].[FactFacilityCapacity] as child left join [production].[DimMaterial] as parent on child.[CommodityDimMaterial_SK] = parent.[DimMaterial_SK] where child.[CommodityDimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [facilities].[FactFacilityCapacity] where [DimDataSource_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [facilities].[FactFacilityCapacity] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- facilities.FactFacilityCapacity: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [facilities].[FactFacilityCapacity] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- facilities.FactFacilityCapacity: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityCapacity', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [facilities].[FactFacilityCapacity]) as counted where row_count < 1) AS failing;
+        -- facilities.FactFacilityOwnership: not_null__FacilityOwnership_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'not_null__FacilityOwnership_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityOwnership_BK] from [facilities].[FactFacilityOwnership] where [FacilityOwnership_BK] is null) AS failing;
+        -- facilities.FactFacilityOwnership: unique__FacilityOwnership_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'unique__FacilityOwnership_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityOwnership_BK] from [facilities].[FactFacilityOwnership] where [FacilityOwnership_BK] is not null group by [FacilityOwnership_BK] having count(*) > 1) AS failing;
+        -- facilities.FactFacilityOwnership: not_null__FactFacilityOwnership_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'not_null__FactFacilityOwnership_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityOwnership_SK] from [facilities].[FactFacilityOwnership] where [FactFacilityOwnership_SK] is null) AS failing;
+        -- facilities.FactFacilityOwnership: unique__FactFacilityOwnership_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'unique__FactFacilityOwnership_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityOwnership_SK] from [facilities].[FactFacilityOwnership] where [FactFacilityOwnership_SK] is not null group by [FactFacilityOwnership_SK] having count(*) > 1) AS failing;
+        -- facilities.FactFacilityOwnership: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [facilities].[FactFacilityOwnership] where [DimFacility_SK] is null) AS failing;
+        -- facilities.FactFacilityOwnership: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [facilities].[FactFacilityOwnership] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- facilities.FactFacilityOwnership: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [facilities].[FactFacilityOwnership] where [DimDataSource_SK] is null) AS failing;
+        -- facilities.FactFacilityOwnership: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [facilities].[FactFacilityOwnership] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- facilities.FactFacilityOwnership: accepted_range__OwnershipYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'accepted_range__OwnershipYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [OwnershipYear] from [facilities].[FactFacilityOwnership] where [OwnershipYear] < 1990 or [OwnershipYear] > 2030) AS failing;
+        -- facilities.FactFacilityOwnership: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'facilities.FactFacilityOwnership', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [facilities].[FactFacilityOwnership]) as counted where row_count < 1) AS failing;
+        -- production.DimMaterial: not_null__Material_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.DimMaterial', 'not_null__Material_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Material_BK] from [production].[DimMaterial] where [Material_BK] is null) AS failing;
+        -- production.DimMaterial: unique__Material_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.DimMaterial', 'unique__Material_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [Material_BK] from [production].[DimMaterial] where [Material_BK] is not null group by [Material_BK] having count(*) > 1) AS failing;
+        -- production.DimMaterial: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.DimMaterial', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[DimMaterial] where [DimMaterial_SK] is null) AS failing;
+        -- production.DimMaterial: unique__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.DimMaterial', 'unique__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[DimMaterial] where [DimMaterial_SK] is not null group by [DimMaterial_SK] having count(*) > 1) AS failing;
+        -- production.DimMaterial: accepted_values__MaterialCategoryCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.DimMaterial', 'accepted_values__MaterialCategoryCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialCategoryCode] from [production].[DimMaterial] where [MaterialCategoryCode] is not null and [MaterialCategoryCode] not in ('MINERAL', 'COMMODITY', 'OTHER_PRODUCT', 'FF_MINERAL', 'FF_COMMODITY', 'AGGREGATE')) AS failing;
+        -- production.DimMaterial: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.DimMaterial', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[DimMaterial]) as counted where row_count < 1) AS failing;
+        -- production.FactCommodityOutput: not_null__CommodityProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'not_null__CommodityProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityProduction_BK] from [production].[FactCommodityOutput] where [CommodityProduction_BK] is null) AS failing;
+        -- production.FactCommodityOutput: unique__CommodityProduction_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'unique__CommodityProduction_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityProduction_BK] from [production].[FactCommodityOutput] where [CommodityProduction_BK] is not null group by [CommodityProduction_BK] having count(*) > 1) AS failing;
+        -- production.FactCommodityOutput: not_null__FactCommodityOutput_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'not_null__FactCommodityOutput_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactCommodityOutput_SK] from [production].[FactCommodityOutput] where [FactCommodityOutput_SK] is null) AS failing;
+        -- production.FactCommodityOutput: unique__FactCommodityOutput_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'unique__FactCommodityOutput_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactCommodityOutput_SK] from [production].[FactCommodityOutput] where [FactCommodityOutput_SK] is not null group by [FactCommodityOutput_SK] having count(*) > 1) AS failing;
+        -- production.FactCommodityOutput: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactCommodityOutput] where [DimFacility_SK] is null) AS failing;
+        -- production.FactCommodityOutput: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactCommodityOutput] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactCommodityOutput: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[FactCommodityOutput] where [DimMaterial_SK] is null) AS failing;
+        -- production.FactCommodityOutput: relationships__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'relationships__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimMaterial_SK] from [production].[FactCommodityOutput] as child left join [production].[DimMaterial] as parent on child.[DimMaterial_SK] = parent.[DimMaterial_SK] where child.[DimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactCommodityOutput: not_null__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'not_null__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityDimMaterial_SK] from [production].[FactCommodityOutput] where [CommodityDimMaterial_SK] is null) AS failing;
+        -- production.FactCommodityOutput: relationships__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'relationships__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[CommodityDimMaterial_SK] from [production].[FactCommodityOutput] as child left join [production].[DimMaterial] as parent on child.[CommodityDimMaterial_SK] = parent.[DimMaterial_SK] where child.[CommodityDimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactCommodityOutput: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [production].[FactCommodityOutput] where [DimDataSource_SK] is null) AS failing;
+        -- production.FactCommodityOutput: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [production].[FactCommodityOutput] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- production.FactCommodityOutput: accepted_values__StreamTypeCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'accepted_values__StreamTypeCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamTypeCode] from [production].[FactCommodityOutput] where [StreamTypeCode] is not null and [StreamTypeCode] not in ('ORE MINED', 'ORE PROCESSED', 'CONCENTRATE', 'NM MINERAL')) AS failing;
+        -- production.FactCommodityOutput: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [production].[FactCommodityOutput] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FactCommodityOutput: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactCommodityOutput', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactCommodityOutput]) as counted where row_count < 1) AS failing;
+        -- production.FactFacilityProcessing: not_null__FacilityProcessing_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'not_null__FacilityProcessing_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityProcessing_BK] from [production].[FactFacilityProcessing] where [FacilityProcessing_BK] is null) AS failing;
+        -- production.FactFacilityProcessing: unique__FacilityProcessing_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'unique__FacilityProcessing_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityProcessing_BK] from [production].[FactFacilityProcessing] where [FacilityProcessing_BK] is not null group by [FacilityProcessing_BK] having count(*) > 1) AS failing;
+        -- production.FactFacilityProcessing: not_null__FactFacilityProcessing_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'not_null__FactFacilityProcessing_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityProcessing_SK] from [production].[FactFacilityProcessing] where [FactFacilityProcessing_SK] is null) AS failing;
+        -- production.FactFacilityProcessing: unique__FactFacilityProcessing_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'unique__FactFacilityProcessing_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityProcessing_SK] from [production].[FactFacilityProcessing] where [FactFacilityProcessing_SK] is not null group by [FactFacilityProcessing_SK] having count(*) > 1) AS failing;
+        -- production.FactFacilityProcessing: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactFacilityProcessing] where [DimFacility_SK] is null) AS failing;
+        -- production.FactFacilityProcessing: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactFacilityProcessing] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactFacilityProcessing: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [production].[FactFacilityProcessing] where [DimDataSource_SK] is null) AS failing;
+        -- production.FactFacilityProcessing: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [production].[FactFacilityProcessing] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- production.FactFacilityProcessing: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [production].[FactFacilityProcessing] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FactFacilityProcessing: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityProcessing', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactFacilityProcessing]) as counted where row_count < 1) AS failing;
+        -- production.FactFacilityYearProduction: not_null__FacilityYear_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'not_null__FacilityYear_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityYear_BK] from [production].[FactFacilityYearProduction] where [FacilityYear_BK] is null) AS failing;
+        -- production.FactFacilityYearProduction: unique__FacilityYear_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'unique__FacilityYear_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FacilityYear_BK] from [production].[FactFacilityYearProduction] where [FacilityYear_BK] is not null group by [FacilityYear_BK] having count(*) > 1) AS failing;
+        -- production.FactFacilityYearProduction: not_null__FactFacilityYearProduction_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'not_null__FactFacilityYearProduction_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityYearProduction_SK] from [production].[FactFacilityYearProduction] where [FactFacilityYearProduction_SK] is null) AS failing;
+        -- production.FactFacilityYearProduction: unique__FactFacilityYearProduction_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'unique__FactFacilityYearProduction_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactFacilityYearProduction_SK] from [production].[FactFacilityYearProduction] where [FactFacilityYearProduction_SK] is not null group by [FactFacilityYearProduction_SK] having count(*) > 1) AS failing;
+        -- production.FactFacilityYearProduction: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactFacilityYearProduction] where [DimFacility_SK] is null) AS failing;
+        -- production.FactFacilityYearProduction: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactFacilityYearProduction] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactFacilityYearProduction: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [production].[FactFacilityYearProduction] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FactFacilityYearProduction: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactFacilityYearProduction', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactFacilityYearProduction]) as counted where row_count < 1) AS failing;
+        -- production.FactMaterialStream: not_null__MaterialStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'not_null__MaterialStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialStream_BK] from [production].[FactMaterialStream] where [MaterialStream_BK] is null) AS failing;
+        -- production.FactMaterialStream: unique__MaterialStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'unique__MaterialStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialStream_BK] from [production].[FactMaterialStream] where [MaterialStream_BK] is not null group by [MaterialStream_BK] having count(*) > 1) AS failing;
+        -- production.FactMaterialStream: not_null__FactMaterialStream_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'not_null__FactMaterialStream_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactMaterialStream_SK] from [production].[FactMaterialStream] where [FactMaterialStream_SK] is null) AS failing;
+        -- production.FactMaterialStream: unique__FactMaterialStream_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'unique__FactMaterialStream_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactMaterialStream_SK] from [production].[FactMaterialStream] where [FactMaterialStream_SK] is not null group by [FactMaterialStream_SK] having count(*) > 1) AS failing;
+        -- production.FactMaterialStream: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactMaterialStream] where [DimFacility_SK] is null) AS failing;
+        -- production.FactMaterialStream: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactMaterialStream] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactMaterialStream: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[FactMaterialStream] where [DimMaterial_SK] is null) AS failing;
+        -- production.FactMaterialStream: relationships__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'relationships__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimMaterial_SK] from [production].[FactMaterialStream] as child left join [production].[DimMaterial] as parent on child.[DimMaterial_SK] = parent.[DimMaterial_SK] where child.[DimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactMaterialStream: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [production].[FactMaterialStream] where [DimDataSource_SK] is null) AS failing;
+        -- production.FactMaterialStream: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [production].[FactMaterialStream] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- production.FactMaterialStream: accepted_values__StreamSourceCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'accepted_values__StreamSourceCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamSourceCode] from [production].[FactMaterialStream] where [StreamSourceCode] is not null and [StreamSourceCode] not in ('MINERAL', 'COAL')) AS failing;
+        -- production.FactMaterialStream: accepted_values__StreamTypeCode
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'accepted_values__StreamTypeCode', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [StreamTypeCode] from [production].[FactMaterialStream] where [StreamTypeCode] is not null and [StreamTypeCode] not in ('ORE MINED', 'ORE PROCESSED', 'CONCENTRATE', 'NM MINERAL', 'COAL MINED', 'CLEAN COAL')) AS failing;
+        -- production.FactMaterialStream: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [production].[FactMaterialStream] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FactMaterialStream: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactMaterialStream', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactMaterialStream]) as counted where row_count < 1) AS failing;
+        -- production.FactReserve: not_null__MaterialReserve_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'not_null__MaterialReserve_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialReserve_BK] from [production].[FactReserve] where [MaterialReserve_BK] is null) AS failing;
+        -- production.FactReserve: unique__MaterialReserve_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'unique__MaterialReserve_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [MaterialReserve_BK] from [production].[FactReserve] where [MaterialReserve_BK] is not null group by [MaterialReserve_BK] having count(*) > 1) AS failing;
+        -- production.FactReserve: not_null__FactReserve_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'not_null__FactReserve_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactReserve_SK] from [production].[FactReserve] where [FactReserve_SK] is null) AS failing;
+        -- production.FactReserve: unique__FactReserve_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'unique__FactReserve_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactReserve_SK] from [production].[FactReserve] where [FactReserve_SK] is not null group by [FactReserve_SK] having count(*) > 1) AS failing;
+        -- production.FactReserve: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactReserve] where [DimFacility_SK] is null) AS failing;
+        -- production.FactReserve: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactReserve] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactReserve: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[FactReserve] where [DimMaterial_SK] is null) AS failing;
+        -- production.FactReserve: relationships__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'relationships__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimMaterial_SK] from [production].[FactReserve] as child left join [production].[DimMaterial] as parent on child.[DimMaterial_SK] = parent.[DimMaterial_SK] where child.[DimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactReserve: not_null__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'not_null__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityDimMaterial_SK] from [production].[FactReserve] where [CommodityDimMaterial_SK] is null) AS failing;
+        -- production.FactReserve: relationships__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'relationships__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[CommodityDimMaterial_SK] from [production].[FactReserve] as child left join [production].[DimMaterial] as parent on child.[CommodityDimMaterial_SK] = parent.[DimMaterial_SK] where child.[CommodityDimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactReserve: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [production].[FactReserve] where [DimDataSource_SK] is null) AS failing;
+        -- production.FactReserve: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [production].[FactReserve] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- production.FactReserve: accepted_range__ReserveYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'accepted_range__ReserveYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReserveYear] from [production].[FactReserve] where [ReserveYear] < 1990 or [ReserveYear] > 2030) AS failing;
+        -- production.FactReserve: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactReserve', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactReserve]) as counted where row_count < 1) AS failing;
+        -- production.FactTransport: not_null__TransportFlow_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'not_null__TransportFlow_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [TransportFlow_BK] from [production].[FactTransport] where [TransportFlow_BK] is null) AS failing;
+        -- production.FactTransport: unique__TransportFlow_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'unique__TransportFlow_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [TransportFlow_BK] from [production].[FactTransport] where [TransportFlow_BK] is not null group by [TransportFlow_BK] having count(*) > 1) AS failing;
+        -- production.FactTransport: not_null__FactTransport_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'not_null__FactTransport_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactTransport_SK] from [production].[FactTransport] where [FactTransport_SK] is null) AS failing;
+        -- production.FactTransport: unique__FactTransport_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'unique__FactTransport_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactTransport_SK] from [production].[FactTransport] where [FactTransport_SK] is not null group by [FactTransport_SK] having count(*) > 1) AS failing;
+        -- production.FactTransport: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactTransport] where [DimFacility_SK] is null) AS failing;
+        -- production.FactTransport: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactTransport] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactTransport: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[FactTransport] where [DimMaterial_SK] is null) AS failing;
+        -- production.FactTransport: relationships__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'relationships__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimMaterial_SK] from [production].[FactTransport] as child left join [production].[DimMaterial] as parent on child.[DimMaterial_SK] = parent.[DimMaterial_SK] where child.[DimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactTransport: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [production].[FactTransport] where [DimDataSource_SK] is null) AS failing;
+        -- production.FactTransport: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [production].[FactTransport] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- production.FactTransport: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [production].[FactTransport] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FactTransport: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactTransport', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactTransport]) as counted where row_count < 1) AS failing;
+        -- production.FactWaste: not_null__WasteStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'not_null__WasteStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [WasteStream_BK] from [production].[FactWaste] where [WasteStream_BK] is null) AS failing;
+        -- production.FactWaste: unique__WasteStream_BK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'unique__WasteStream_BK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [WasteStream_BK] from [production].[FactWaste] where [WasteStream_BK] is not null group by [WasteStream_BK] having count(*) > 1) AS failing;
+        -- production.FactWaste: not_null__FactWaste_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'not_null__FactWaste_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactWaste_SK] from [production].[FactWaste] where [FactWaste_SK] is null) AS failing;
+        -- production.FactWaste: unique__FactWaste_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'unique__FactWaste_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [FactWaste_SK] from [production].[FactWaste] where [FactWaste_SK] is not null group by [FactWaste_SK] having count(*) > 1) AS failing;
+        -- production.FactWaste: not_null__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'not_null__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimFacility_SK] from [production].[FactWaste] where [DimFacility_SK] is null) AS failing;
+        -- production.FactWaste: relationships__DimFacility_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'relationships__DimFacility_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimFacility_SK] from [production].[FactWaste] as child left join [facilities].[DimFacility] as parent on child.[DimFacility_SK] = parent.[DimFacility_SK] where child.[DimFacility_SK] is not null and parent.[DimFacility_SK] is null) AS failing;
+        -- production.FactWaste: not_null__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'not_null__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimMaterial_SK] from [production].[FactWaste] where [DimMaterial_SK] is null) AS failing;
+        -- production.FactWaste: relationships__DimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'relationships__DimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimMaterial_SK] from [production].[FactWaste] as child left join [production].[DimMaterial] as parent on child.[DimMaterial_SK] = parent.[DimMaterial_SK] where child.[DimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactWaste: not_null__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'not_null__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [CommodityDimMaterial_SK] from [production].[FactWaste] where [CommodityDimMaterial_SK] is null) AS failing;
+        -- production.FactWaste: relationships__CommodityDimMaterial_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'relationships__CommodityDimMaterial_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[CommodityDimMaterial_SK] from [production].[FactWaste] as child left join [production].[DimMaterial] as parent on child.[CommodityDimMaterial_SK] = parent.[DimMaterial_SK] where child.[CommodityDimMaterial_SK] is not null and parent.[DimMaterial_SK] is null) AS failing;
+        -- production.FactWaste: not_null__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'not_null__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [DimDataSource_SK] from [production].[FactWaste] where [DimDataSource_SK] is null) AS failing;
+        -- production.FactWaste: relationships__DimDataSource_SK
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'relationships__DimDataSource_SK', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select child.[DimDataSource_SK] from [production].[FactWaste] as child left join [facilities].[DimDataSource] as parent on child.[DimDataSource_SK] = parent.[DimDataSource_SK] where child.[DimDataSource_SK] is not null and parent.[DimDataSource_SK] is null) AS failing;
+        -- production.FactWaste: accepted_range__ReportingYear
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'accepted_range__ReportingYear', 'error',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select [ReportingYear] from [production].[FactWaste] where [ReportingYear] < 1990 or [ReportingYear] > 2030) AS failing;
+        -- production.FactWaste: row_count_between__table_1
+        INSERT INTO [ops].[DataQualityResult] ([LoadStepID], [Layer], [TableName],
+            [TestName], [Severity], [FailureCount], [TestedTimestamp])
+        SELECT @LoadStepID, 'gold', 'production.FactWaste', 'row_count_between__table_1', 'warn',
+            COUNT(*), SYSUTCDATETIME()
+        FROM (select row_count from (select count(*) as row_count from [production].[FactWaste]) as counted where row_count < 1) AS failing;
+    END;
+
     DECLARE @Failed int = (
         SELECT COUNT(*) FROM [ops].[DataQualityResult]
         WHERE [LoadStepID] = @LoadStepID AND [Layer] = @Layer

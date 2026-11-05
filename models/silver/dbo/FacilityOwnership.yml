@@ -1,0 +1,37 @@
+description: >
+  One row per facility and year with the owners (and their ownership shares)
+  and the operators. Grain = FacilityOwnership_BK (source row id).
+source: {source: dbo, table: ownership}
+load: {mode: full}
+columns:
+  - name: FacilityOwnership_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility that is owned and operated; key of Facility.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: Owners
+    data_type: string
+    expression: trim(owners)
+    description: Owners of the facility, with their ownership share in brackets.
+  - name: Operators
+    data_type: string
+    expression: trim(operators)
+    description: Operators of the facility.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: OwnershipYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year for which the ownership shares and operator apply.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

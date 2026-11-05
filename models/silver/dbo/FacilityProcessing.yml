@@ -1,0 +1,82 @@
+description: >
+  One row per facility, year, input material and output material of a
+  processing step. Grain = FacilityProcessing_BK (source row id).
+source: {source: dbo, table: processing}
+load: {mode: full}
+columns:
+  - name: FacilityProcessing_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Processing facility; key of Facility.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: FacilityType
+    data_type: string
+    expression: trim(facility_type)
+    description: Type of processing facility, for example Refinery or Smelter.
+  - name: InputMaterial
+    data_type: string
+    expression: trim(input)
+    description: Input materials, as free text. TODO(confirm how input values map to Material).
+  - name: OutputMaterial
+    data_type: string
+    expression: trim(output)
+    description: Output materials, as free text. TODO(confirm how output values map to Material).
+  - name: ReportingPeriod
+    data_type: string
+    expression: coalesce(trim(reporting_period), 'January-December')
+    description: >
+      Period in which the stream occurred. Always relates to the year in which
+      the period ends. January-December when not specified in the source.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: InputValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(input_value_tonnes as decimal(18,4))
+    description: Mass of input materials, in tonnes.
+  - name: OutputValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(output_value_tonnes as decimal(18,4))
+    description: Mass of output materials, in tonnes.
+  - name: GradePartsPerMillion
+    data_type: decimal(18,4)
+    expression: cast(grade_ppm as decimal(18,4))
+    description: Grade of the material, in parts per million.
+  - name: RecoveryRate
+    data_type: decimal(18,6)
+    expression: cast(recovery_rate as decimal(18,6))
+    description: Share of output material recovered from the output material contained in the input material.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    expression: cast(amount_sold_tonnes as decimal(18,4))
+    description: Mass of output material sold, in tonnes.
+  - name: MetalPayableTonnes
+    data_type: decimal(18,4)
+    expression: try_cast(metal_payable_tonnes as decimal(18,4))
+    description: >
+      Mass of output material contained in the input material after a share
+      specified by the facility operator is deducted, in tonnes. Null when the
+      bronze text is not a number.
+  - name: HasPurchasedMaterial
+    data_type: boolean
+    expression: >
+      case when lower(trim(incl_purchased)) = 'yes' then true
+           when lower(trim(incl_purchased)) = 'no' then false end
+    description: >
+      True when third-party material is included in the processing at a mine
+      with an on-site processing facility. Null when not stated.
+  - name: ReportingYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

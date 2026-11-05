@@ -23,13 +23,25 @@ GO
 -- Columns added to the spec after the first deploy.
 -- Fabric can only add nullable columns; type changes need a
 -- migration (see the standards, section 7.5).
-IF COL_LENGTH('sales.FactNewBusiness', 'DimAgent_SK') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'sales'
+               AND TABLE_NAME = 'FactNewBusiness'
+               AND COLUMN_NAME = 'DimAgent_SK')
     ALTER TABLE [sales].[FactNewBusiness] ADD [DimAgent_SK] bigint NULL;
-IF COL_LENGTH('sales.FactNewBusiness', 'ProductCode') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'sales'
+               AND TABLE_NAME = 'FactNewBusiness'
+               AND COLUMN_NAME = 'ProductCode')
     ALTER TABLE [sales].[FactNewBusiness] ADD [ProductCode] varchar(20) NULL;
-IF COL_LENGTH('sales.FactNewBusiness', 'AnnualPremiumAmount') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'sales'
+               AND TABLE_NAME = 'FactNewBusiness'
+               AND COLUMN_NAME = 'AnnualPremiumAmount')
     ALTER TABLE [sales].[FactNewBusiness] ADD [AnnualPremiumAmount] decimal(18,2) NULL;
-IF COL_LENGTH('sales.FactNewBusiness', 'IssueDate') IS NULL
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = 'sales'
+               AND TABLE_NAME = 'FactNewBusiness'
+               AND COLUMN_NAME = 'IssueDate')
     ALTER TABLE [sales].[FactNewBusiness] ADD [IssueDate] date NULL;
 GO
 

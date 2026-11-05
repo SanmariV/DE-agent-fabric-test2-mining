@@ -1,0 +1,64 @@
+description: >
+  One row per facility, year and waste stream. Grain = WasteStream_BK (source row id).
+source: {source: dbo, table: waste}
+load: {mode: full}
+columns:
+  - name: WasteStream_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility producing the waste; key of Facility.
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(material))
+    description: Material to which the waste stream relates; key of Material.
+  - name: CommodityMaterial_BK
+    data_type: string
+    expression: upper(trim(commodity))
+    description: Commodity to which the waste stream relates; key of Material.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: MiningMethodCode
+    data_type: string
+    expression: upper(trim(type_mining))
+    description: >
+      Mining method of the material to which the waste relates. Values in the
+      data are SURFACE and UNDERGROUND. Null when not stated.
+  - name: WasteType
+    data_type: string
+    expression: trim(waste_type)
+    description: Type of waste.
+  - name: ReportingPeriod
+    data_type: string
+    expression: coalesce(trim(reporting_period), 'January-December')
+    description: >
+      Period in which the stream occurred. Always relates to the year in which
+      the period ends. January-December when not specified in the source.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(value_tonnes as decimal(18,4))
+    description: Mass of waste, in tonnes.
+  - name: TotalMaterialTonnes
+    data_type: decimal(18,4)
+    expression: cast(total_material_tonnes as decimal(18,4))
+    description: Total material extracted of a mine, that is ore mined plus waste mined, in tonnes.
+  - name: StrippingRatio
+    data_type: decimal(18,4)
+    expression: cast(stripping_ratio as decimal(18,4))
+    description: Ratio of how much overburden is removed for each unit of ore mined.
+  - name: ReportingYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

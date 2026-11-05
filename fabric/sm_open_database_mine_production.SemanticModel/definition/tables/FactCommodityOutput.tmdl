@@ -1,0 +1,159 @@
+/// One row per commodity contained in a mineral stream of a facility and year. Grain = CommodityProduction_BK. The stream type comes from the linked mineral stream and is null when no mineral stream is linked.
+table FactCommodityOutput
+	lineageTag: 6b2d20b6-514e-58d2-ac73-0552eaef0109
+	sourceLineageTag: [production].[FactCommodityOutput]
+
+	/// Total mass of the commodity, in tonnes.
+	measure CommodityTonnesTotal = SUM('FactCommodityOutput'[ValueTonnes])
+		formatString: #,0.00
+		lineageTag: 83921def-fed9-5b3d-9b46-ab479b3a5512
+
+	/// Total mass of output material sold, in tonnes.
+	measure CommodityAmountSoldTonnesTotal = SUM('FactCommodityOutput'[AmountSoldTonnes])
+		formatString: #,0.00
+		lineageTag: f50a4225-ccaa-5d54-b511-e27ba4ffe579
+
+	/// Total payable metal, in tonnes.
+	measure CommodityMetalPayableTonnesTotal = SUM('FactCommodityOutput'[MetalPayableTonnes])
+		formatString: #,0.00
+		lineageTag: 3d88ed7c-8a76-5c5d-ae71-bdeaf0f0ba26
+
+	/// Simple average recovery rate over the records, not weighted by tonnes. TODO(confirm with the business)
+	measure CommodityRecoveryRateAverage = AVERAGE('FactCommodityOutput'[RecoveryRate])
+		formatString: 0.0000
+		lineageTag: 73c1316a-2615-5583-af67-72b5499f6340
+
+	/// Simple average grade in parts per million over the records, not weighted by tonnes. TODO(confirm with the business)
+	measure CommodityGradePartsPerMillionAverage = AVERAGE('FactCommodityOutput'[GradePartsPerMillion])
+		formatString: #,0.00
+		lineageTag: ba005ce5-2cad-5751-ab26-2e1842af4561
+
+	/// Surrogate key of FactCommodityOutput.
+	column FactCommodityOutput_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 8170d455-4b29-51de-a154-8970d1ad0c3c
+		summarizeBy: none
+		sourceColumn: FactCommodityOutput_SK
+
+	/// Unique ID of the commodity record from the source.
+	column CommodityProduction_BK
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a96ff1b-91df-5159-a3b3-1806c19826cc
+		summarizeBy: none
+		sourceColumn: CommodityProduction_BK
+
+	/// Facility producing the commodity (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: d75cad78-4fe4-5513-88b6-2ee4af05aa9f
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Mineral the commodity is contained in (-1 unknown).
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9e026e6f-3d66-5145-9a19-4245950a4d19
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// Commodity the record relates to (-1 unknown).
+	column CommodityDimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 1e6f452c-2e35-5338-9d87-8bfb47acb5e9
+		summarizeBy: none
+		sourceColumn: CommodityDimMaterial_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 764c8adc-c63d-5272-b61e-bb2e4ac02ed2
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Stream type of the linked mineral stream (ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL). Null when no mineral stream is linked.
+	column StreamTypeCode
+		dataType: string
+		lineageTag: 594f7721-655d-57e8-a49d-0a544c3fc049
+		summarizeBy: none
+		sourceColumn: StreamTypeCode
+
+	/// Period in which the stream occurred; relates to the year in which the period ends.
+	column ReportingPeriod
+		dataType: string
+		lineageTag: aa6a5c2b-cb78-5259-977e-d19ca54f4b09
+		summarizeBy: none
+		sourceColumn: ReportingPeriod
+
+	/// Year in which the reporting period ends.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: f853a72e-82b3-56d6-8fc4-507c6fb8c003
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Mass of the commodity, in tonnes.
+	column ValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 3fde23b6-eaf2-515c-9623-fc3db91cd35c
+		summarizeBy: none
+		sourceColumn: ValueTonnes
+
+	/// Grade of the material relating to the commodity, in parts per million.
+	column GradePartsPerMillion
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 0a09b548-12f8-5b62-beee-3f60f8ceda13
+		summarizeBy: none
+		sourceColumn: GradePartsPerMillion
+
+	/// Share of output material recovered from the output material contained in the input material.
+	column RecoveryRate
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 955c11b0-aa05-58b7-bb9b-ebc169608a54
+		summarizeBy: none
+		sourceColumn: RecoveryRate
+
+	/// Grade relating to the commodity multiplied by the recovery rate, in parts per million.
+	column YieldPartsPerMillion
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: e87d0904-2588-500e-addd-5c4eda327ebf
+		summarizeBy: none
+		sourceColumn: YieldPartsPerMillion
+
+	/// Mass of output material sold, in tonnes.
+	column AmountSoldTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: b95186fd-9f11-53f2-b7c6-a3bd90ee1a19
+		summarizeBy: none
+		sourceColumn: AmountSoldTonnes
+
+	/// Mass of output material contained in the input material after the operator's deduction, in tonnes.
+	column MetalPayableTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 6541b73d-4175-54b4-99d4-71e321cc0cff
+		summarizeBy: none
+		sourceColumn: MetalPayableTonnes
+
+	partition FactCommodityOutput = entity
+		mode: directLake
+		source
+			entityName: FactCommodityOutput
+			schemaName: production
+			expressionSource: DatabaseQuery

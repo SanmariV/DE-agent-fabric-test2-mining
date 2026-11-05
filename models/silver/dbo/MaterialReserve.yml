@@ -1,0 +1,49 @@
+description: >
+  One row per facility, year and material with the reported reserves.
+  Grain = MaterialReserve_BK (source row id).
+source: {source: dbo, table: reserves}
+load: {mode: full}
+columns:
+  - name: MaterialReserve_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility holding the reserves; key of Facility.
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(material))
+    description: Material of the reserves; key of Material.
+  - name: CommodityMaterial_BK
+    data_type: string
+    expression: upper(trim(commodity))
+    description: Commodity contained in the reserves; key of Material.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: MineralValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(mineral_value_tonnes as decimal(18,4))
+    description: Mass of material reserves, in tonnes.
+  - name: CommodityValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(commodity_value_tonnes as decimal(18,4))
+    description: Mass of the commodity contained in the material reserves, in tonnes.
+  - name: GradePartsPerMillion
+    data_type: decimal(18,4)
+    expression: cast(grade_ppm as decimal(18,4))
+    description: Grade of the material reserves relating to the stated commodity, in parts per million.
+  - name: ReserveYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year to which the reserves relate.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

@@ -8,5 +8,17 @@ CREATE OR ALTER PROCEDURE [ops].[RunGoldLoads]
 AS
 BEGIN
     SET NOCOUNT ON;
+    EXEC [facilities].[LoadDimDataSource] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [facilities].[LoadDimFacility] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadDimMaterial] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [facilities].[LoadFactFacilityCapacity] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [facilities].[LoadFactFacilityOwnership] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactCommodityOutput] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactFacilityProcessing] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactFacilityYearProduction] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactMaterialStream] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactReserve] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactTransport] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
+    EXEC [production].[LoadFactWaste] @LoadDate = @LoadDate, @LoadStepID = @LoadStepID;
 END
 GO

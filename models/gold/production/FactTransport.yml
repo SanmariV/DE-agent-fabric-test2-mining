@@ -1,0 +1,56 @@
+description: >
+  One row per facility, year and transported product with the destination and
+  mode of transport. Grain = TransportFlow_BK. Products that match no
+  material are linked to the unknown member (-1).
+  TODO(165 of 941 product values have no match in DimMaterial).
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: TransportFlow_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the transport record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Facility the product is transported from (-1 unknown).
+  - name: DimMaterial_SK
+    data_type: bigint
+    references: production.DimMaterial
+    description: Specific material transported (-1 unknown or no match).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: TransportTo
+    data_type: varchar(150)
+    description: Destination of the transport.
+  - name: TransportBy
+    data_type: varchar(60)
+    description: Mode of transport.
+  - name: ExportTo
+    data_type: varchar(200)
+    description: Destination of the exported product.
+  - name: ReportingPeriod
+    data_type: varchar(30)
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: IsExport
+    data_type: bit
+    description: True when the material is exported. Null when not stated.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the transported product, in tonnes.
+measures:
+  - name: TransportTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(ValueTonnes)
+    description: Total mass of transported product, in tonnes.
+    format: "#,0.00"
+tests:
+  - row_count_between: {min: 1, severity: warn}

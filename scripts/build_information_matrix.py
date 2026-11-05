@@ -976,12 +976,13 @@ def cmd_profile(args):
             for i, (fact, column, dim, field) in enumerate(checks, 1):
                 fact_node = p.models[fact]
                 col = p.column_node(fact, column)
+                dim_col = p.column_node(dim, field)
                 stats = run(render(
                     "bus_matrix_check",
                     fact_relation=fact_node["relation_name"],
-                    fact_key=quote(column),
+                    fact_key=quote(col.get("name") or column),
                     dim_relation=p.models[dim]["relation_name"],
-                    dim_key=quote(field),
+                    dim_key=quote(dim_col.get("name") or field),
                     sample_limit=0 if (
                         is_pii(fact_node, col)
                         or is_pii(p.models[dim], p.column_node(dim, field))

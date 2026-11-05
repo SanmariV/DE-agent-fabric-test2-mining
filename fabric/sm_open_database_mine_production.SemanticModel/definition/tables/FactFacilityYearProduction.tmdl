@@ -1,0 +1,96 @@
+/// One row per facility and reporting year with the mass mined, processed, concentrated and wasted. Grain = FacilityYear_BK. TODO(confirm that tonnes may be summed across different materials of one facility and year; the data cannot answer this).
+table FactFacilityYearProduction
+	lineageTag: 804cc553-e0db-5ecd-bc36-b1d378d4638d
+	sourceLineageTag: [production].[FactFacilityYearProduction]
+
+	/// Total ore mined, in tonnes. TODO(confirm with the business)
+	measure OreMinedTonnesTotal = SUM('FactFacilityYearProduction'[OreMinedTonnes])
+		formatString: #,0.00
+		lineageTag: 582b4b18-5050-54ed-8e7f-95801ff10eaf
+
+	/// Total ore processed, in tonnes. TODO(confirm with the business)
+	measure OreProcessedTonnesTotal = SUM('FactFacilityYearProduction'[OreProcessedTonnes])
+		formatString: #,0.00
+		lineageTag: 81455b07-284c-5565-aa1e-9ce3022672dd
+
+	/// Total concentrate produced, in tonnes. TODO(confirm with the business)
+	measure ConcentrateTonnesTotal = SUM('FactFacilityYearProduction'[ConcentrateTonnes])
+		formatString: #,0.00
+		lineageTag: ba607af1-13cb-5c8b-b63e-a5d08403dbe5
+
+	/// Total waste, in tonnes. TODO(confirm with the business)
+	measure FacilityYearWasteTonnesTotal = SUM('FactFacilityYearProduction'[WasteTonnes])
+		formatString: #,0.00
+		lineageTag: ff1417c5-3f77-5a49-bd04-1e8b647521aa
+
+	/// Surrogate key of FactFacilityYearProduction.
+	column FactFacilityYearProduction_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9a350b7e-2c42-56d7-89ab-7823b1e2f04e
+		summarizeBy: none
+		sourceColumn: FactFacilityYearProduction_SK
+
+	/// Facility key and reporting year joined with a hyphen, for example F123-2019.
+	column FacilityYear_BK
+		dataType: string
+		lineageTag: 92293cc5-7d21-5b16-b7a3-1bc0177399fa
+		summarizeBy: none
+		sourceColumn: FacilityYear_BK
+
+	/// Facility (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 152bcbaa-92ad-5813-bd3c-d4dbe0ee2359
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Year in which the reporting period ends.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 150a6171-8a82-563f-b04d-c0b6fc290776
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Sum of ore mined over all materials in the year, in tonnes. Null when no ore mined row exists.
+	column OreMinedTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 5b91d2ae-d825-531a-8c69-80bc1ac529d5
+		summarizeBy: none
+		sourceColumn: OreMinedTonnes
+
+	/// Sum of ore processed over all materials in the year, in tonnes. Null when no ore processed row exists.
+	column OreProcessedTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 5b6fa70f-e04e-514f-bfe8-a9a877950f1e
+		summarizeBy: none
+		sourceColumn: OreProcessedTonnes
+
+	/// Sum of concentrate over all materials in the year, in tonnes. Null when no concentrate row exists.
+	column ConcentrateTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 91cb175f-76e3-5b72-9417-728b9afc222e
+		summarizeBy: none
+		sourceColumn: ConcentrateTonnes
+
+	/// Sum of waste over all waste streams in the year, in tonnes. Null when no waste row exists.
+	column WasteTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: d02f2852-7e37-54c6-a553-d8f89042d66e
+		summarizeBy: none
+		sourceColumn: WasteTonnes
+
+	partition FactFacilityYearProduction = entity
+		mode: directLake
+		source
+			entityName: FactFacilityYearProduction
+			schemaName: production
+			expressionSource: DatabaseQuery

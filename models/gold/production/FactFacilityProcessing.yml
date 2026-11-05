@@ -1,0 +1,91 @@
+description: >
+  One row per facility, year, input material and output material of a
+  processing step. Grain = FacilityProcessing_BK. Input and output materials
+  are free text and are not linked to DimMaterial.
+  TODO(confirm how input and output text values map to DimMaterial).
+meta:
+  matrix:
+    refresh_frequency: None (static snapshot)
+columns:
+  - name: FacilityProcessing_BK
+    data_type: int
+    business_key: true
+    description: Unique ID of the processing record from the source.
+  - name: DimFacility_SK
+    data_type: bigint
+    references: facilities.DimFacility
+    description: Processing facility (-1 unknown).
+  - name: DimDataSource_SK
+    data_type: bigint
+    references: facilities.DimDataSource
+    description: Source of the record (-1 unknown or not stated).
+  - name: FacilityType
+    data_type: varchar(30)
+    description: Type of processing facility, for example Refinery or Smelter.
+  - name: InputMaterial
+    data_type: varchar(100)
+    description: Input materials, as free text.
+  - name: OutputMaterial
+    data_type: varchar(120)
+    description: Output materials, as free text.
+  - name: ReportingPeriod
+    data_type: varchar(30)
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: HasPurchasedMaterial
+    data_type: bit
+    description: >
+      True when third-party material is included in the processing at a mine
+      with an on-site processing facility. Null when not stated.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}
+  - name: InputValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of input materials, in tonnes.
+  - name: OutputValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of output materials, in tonnes.
+  - name: GradePartsPerMillion
+    data_type: decimal(18,4)
+    description: Grade of the material, in parts per million.
+  - name: RecoveryRate
+    data_type: decimal(18,8)
+    description: Share of output material recovered from the output material contained in the input material.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material sold, in tonnes.
+  - name: MetalPayableTonnes
+    data_type: decimal(18,4)
+    description: >
+      Mass of output material contained in the input material after the
+      operator's deduction, in tonnes. Null when the bronze text is not a number.
+measures:
+  - name: InputTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(InputValueTonnes)
+    description: Total mass of input materials, in tonnes.
+    format: "#,0.00"
+  - name: OutputTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(OutputValueTonnes)
+    description: Total mass of output materials, in tonnes.
+    format: "#,0.00"
+  - name: ProcessingAmountSoldTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(AmountSoldTonnes)
+    description: Total mass of output material sold, in tonnes.
+    format: "#,0.00"
+  - name: ProcessingMetalPayableTonnesTotal
+    meta: {matrix: {unit: Tonnes}}
+    expression: sum(MetalPayableTonnes)
+    description: Total payable metal, in tonnes.
+    format: "#,0.00"
+  - name: ProcessingRecoveryRateAverage
+    meta: {matrix: {unit: Ratio}}
+    expression: avg(RecoveryRate)
+    description: Simple average recovery rate over the records, not weighted by tonnes.
+    format: "0.0000"
+tests:
+  - row_count_between: {min: 1, severity: warn}

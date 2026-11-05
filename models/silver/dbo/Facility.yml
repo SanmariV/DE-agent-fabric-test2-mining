@@ -1,0 +1,109 @@
+description: >
+  One row per mine, processing facility or sub-site (including a few company
+  and region records). Grain = Facility_BK.
+source: {source: dbo, table: facilities}
+load: {mode: full}
+columns:
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    business_key: true
+    description: ID that uniquely identifies each mine, processing facility and sub-site.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the facility record; key of DataSource.
+  - name: FacilityName
+    data_type: string
+    expression: trim(facility_name)
+    description: Name of the facility.
+  - name: FacilityOtherNames
+    data_type: string
+    expression: trim(facility_other_names)
+    description: Other names of the facility.
+  - name: SubSiteName
+    data_type: string
+    expression: trim(sub_site_name)
+    description: Name of the sub-site.
+  - name: SubSiteOtherNames
+    data_type: string
+    expression: trim(sub_site_other_names)
+    description: Other names of the sub-site.
+  - name: FacilityType
+    data_type: string
+    expression: trim(facility_type)
+    description: >
+      Type of facility, for example Mine, Refinery, Smelter, or a comma
+      separated combination. Also holds Company, Region and Concentrator.
+  - name: PrimaryCommodity
+    data_type: string
+    expression: trim(primary_commodity)
+    description: Primary commodity produced by a mine, determined by the economic value of the commodities produced.
+  - name: CommoditiesProducts
+    data_type: string
+    expression: trim(commodities_products)
+    description: Materials, commodities and products produced by this facility.
+  - name: FacilityEquipment
+    data_type: string
+    expression: trim(facility_equipment)
+    description: Equipment present at this facility.
+  - name: ActivityStatus
+    data_type: string
+    expression: lower(trim(activity_status))
+    description: Activity status of the facility, lower-cased. Null when not stated.
+  - name: Country
+    data_type: string
+    expression: trim(country)
+    description: Country in which the facility or sub-site is located.
+  - name: GadmLevel0Code
+    data_type: string
+    expression: trim(gid_0)
+    description: Key to map the facility to GADM regions (level 0).
+  - name: GadmLevel1Code
+    data_type: string
+    expression: trim(gid_1)
+    description: Key to map the facility to GADM regions (level 1).
+  - name: GadmLevel2Code
+    data_type: string
+    expression: trim(gid_2)
+    description: Key to map the facility to GADM regions (level 2).
+  - name: GadmLevel3Code
+    data_type: string
+    expression: trim(gid_3)
+    description: Key to map the facility to GADM regions (level 3).
+  - name: GadmLevel4Code
+    data_type: string
+    expression: trim(gid_4)
+    description: Key to map the facility to GADM regions (level 4).
+  - name: LocationGeometry
+    data_type: string
+    expression: trim(geom)
+    description: Geometry of the facility as text, of type POINT or MULTIPOINT, or empty.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: SurfaceAreaSquareKilometers
+    data_type: decimal(18,4)
+    expression: cast(surface_area_sq_km as decimal(18,4))
+    description: Surface area of the facility or sub-site, in square kilometers.
+  - name: ConcessionAreaSquareKilometers
+    data_type: decimal(18,4)
+    expression: cast(concession_area_sq_km as decimal(18,4))
+    description: Concession area of the facility or sub-site, in square kilometers.
+  - name: ProductionStartYear
+    data_type: int
+    expression: cast(production_start as int)
+    description: Year in which production at this facility started.
+    tests:
+      - accepted_range: {min: 1500, max: 2030}
+  - name: ProductionEndYear
+    data_type: int
+    expression: cast(production_end as int)
+    description: Year in which production at this facility ended.
+    tests:
+      - accepted_range: {min: 1900, max: 2030}
+  - name: ActivityStatusYear
+    data_type: int
+    expression: cast(activity_status_year as int)
+    description: Year to which the activity status relates.

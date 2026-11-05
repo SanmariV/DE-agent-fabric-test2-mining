@@ -1,0 +1,109 @@
+/// One row per mineral or coal stream record of a facility, year and material. Grain = MaterialStream_BK (stream source + source row id). Repeated facility, year, material and type combinations in the source are kept as separate rows.
+table FactMaterialStream
+	lineageTag: faae5a01-215f-5f83-904a-f68b498229a4
+	sourceLineageTag: [production].[FactMaterialStream]
+
+	/// Total mass of the streams, in tonnes. Streams of different types (for example ore mined and concentrate) overlap, so report by stream type. TODO(confirm with the business)
+	measure StreamTonnesTotal = SUM('FactMaterialStream'[ValueTonnes])
+		formatString: #,0.00
+		lineageTag: 390f22ef-285b-5c37-91ab-e82c3a98b916
+
+	/// Total mass of output material sold, in tonnes.
+	measure StreamAmountSoldTonnesTotal = SUM('FactMaterialStream'[AmountSoldTonnes])
+		formatString: #,0.00
+		lineageTag: beeffbf0-615c-5da4-b503-605e7cea157b
+
+	/// Surrogate key of FactMaterialStream.
+	column FactMaterialStream_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b2d74918-23bf-5f7b-8337-a899a23ef998
+		summarizeBy: none
+		sourceColumn: FactMaterialStream_SK
+
+	/// Stream source code and source row id, for example MINERAL-123 or COAL-456.
+	column MaterialStream_BK
+		dataType: string
+		lineageTag: 51740957-4d6e-5d05-850c-6c40f9564e7c
+		summarizeBy: none
+		sourceColumn: MaterialStream_BK
+
+	/// Facility producing the stream (-1 unknown).
+	column DimFacility_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 4d29442a-c9cc-5695-9a38-ed2719775c83
+		summarizeBy: none
+		sourceColumn: DimFacility_SK
+
+	/// Material of the stream (-1 unknown).
+	column DimMaterial_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 3bcff2c0-7ef1-54c9-bc71-3f9520159fa3
+		summarizeBy: none
+		sourceColumn: DimMaterial_SK
+
+	/// Source of the record (-1 unknown or not stated).
+	column DimDataSource_SK
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 742a8869-cf52-57b4-b0f2-753a65e5a883
+		summarizeBy: none
+		sourceColumn: DimDataSource_SK
+
+	/// Table the stream comes from (MINERAL or COAL).
+	column StreamSourceCode
+		dataType: string
+		lineageTag: 61f1133e-a028-5a4a-af0e-962ed8f027e9
+		summarizeBy: none
+		sourceColumn: StreamSourceCode
+
+	/// Type of the stream: ORE MINED, ORE PROCESSED, CONCENTRATE or NM MINERAL for mineral rows, COAL MINED or CLEAN COAL for coal rows.
+	column StreamTypeCode
+		dataType: string
+		lineageTag: 75596f3b-232f-56c7-be26-bbb81c7ecd76
+		summarizeBy: none
+		sourceColumn: StreamTypeCode
+
+	/// Period in which the stream occurred; relates to the year in which the period ends.
+	column ReportingPeriod
+		dataType: string
+		lineageTag: c6624de6-754b-53f9-8a7b-816dda4ab9ca
+		summarizeBy: none
+		sourceColumn: ReportingPeriod
+
+	/// Year in which the reporting period ends.
+	column ReportingYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 213c1581-37b7-5fac-a7f3-63ac1732a0a7
+		summarizeBy: none
+		sourceColumn: ReportingYear
+
+	/// Mass of the stream, in tonnes.
+	column ValueTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 3e83dd8a-9579-5f48-839f-5a41809ac7fb
+		summarizeBy: none
+		sourceColumn: ValueTonnes
+
+	/// Mass of output material sold, in tonnes.
+	column AmountSoldTonnes
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 9fa3f939-40c4-5bab-9e01-dc8adbb16b49
+		summarizeBy: none
+		sourceColumn: AmountSoldTonnes
+
+	partition FactMaterialStream = entity
+		mode: directLake
+		source
+			entityName: FactMaterialStream
+			schemaName: production
+			expressionSource: DatabaseQuery

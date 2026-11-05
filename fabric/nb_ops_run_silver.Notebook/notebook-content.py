@@ -30,6 +30,27 @@
 
 # ## Parameters
 
+# CELL ********************
+
+# Install the shared library for this session only (no Environment).
+import importlib
+import importlib.util
+import subprocess
+import sys
+
+COMMON_WHEEL = '/lakehouse/default/Files/libs/fabric_de_common-0.1.0-py3-none-any.whl'
+if importlib.util.find_spec("fabric_de_common") is None:
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "-q", COMMON_WHEEL])
+    importlib.invalidate_caches()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # PARAMETERS CELL ********************
 
 load_date = ""
@@ -54,7 +75,23 @@ from fabric_de_common import ops
 SILVER_LAKEHOUSE = 'lh_silver'
 CONCURRENCY = 4
 # (notebook, notebooks it waits for), in dependency order.
-NOTEBOOKS = []
+NOTEBOOKS = [
+    ('nb_silver_dbo_coal_production', []),
+    ('nb_silver_dbo_commodity_production', []),
+    ('nb_silver_dbo_data_source', []),
+    ('nb_silver_dbo_facility', []),
+    ('nb_silver_dbo_facility_capacity', []),
+    ('nb_silver_dbo_facility_ownership', []),
+    ('nb_silver_dbo_facility_processing', []),
+    ('nb_silver_dbo_material', []),
+    ('nb_silver_dbo_material_reserve', []),
+    ('nb_silver_dbo_mineral_production', []),
+    ('nb_silver_dbo_transport_flow', []),
+    ('nb_silver_dbo_waste_stream', []),
+    ('nb_silver_production_commodity_output', ['nb_silver_dbo_commodity_production', 'nb_silver_dbo_mineral_production']),
+    ('nb_silver_production_facility_year_production', ['nb_silver_dbo_mineral_production', 'nb_silver_dbo_waste_stream']),
+    ('nb_silver_production_material_stream', ['nb_silver_dbo_mineral_production', 'nb_silver_dbo_coal_production']),
+]
 
 # METADATA ********************
 

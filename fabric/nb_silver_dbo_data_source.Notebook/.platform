@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_silver_dbo_data_source",
+    "description": "Silver load of dbo.DataSource."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f39f033c-6524-5d1d-b37d-75b6a7578f8e"
+  }
+}

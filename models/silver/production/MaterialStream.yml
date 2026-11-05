@@ -1,0 +1,47 @@
+description: >
+  One row per mineral or coal stream record, stacking MineralProduction and
+  CoalProduction on their common columns. Grain = MaterialStream_BK (stream
+  source + source row id). Repeated facility, year, material and type
+  combinations in the source (54 in minerals, 4 in coal) are kept as separate
+  rows; no collapsing rule is applied. Stream types are kept as in the source,
+  not mapped between coal and ore.
+columns:
+  - name: MaterialStream_BK
+    data_type: string
+    business_key: true
+    description: Stream source code and source row id, for example MINERAL-123 or COAL-456.
+  - name: StreamSourceCode
+    data_type: string
+    description: Table the stream comes from (MINERAL or COAL).
+    tests:
+      - accepted_values: {values: [MINERAL, COAL]}
+  - name: Facility_BK
+    data_type: string
+    description: Facility producing the stream; key of Facility.
+  - name: Material_BK
+    data_type: string
+    description: Material of the stream; key of Material.
+  - name: DataSource_BK
+    data_type: string
+    description: Source of the record; key of DataSource.
+  - name: StreamTypeCode
+    data_type: string
+    description: >
+      Type of the stream: ORE MINED, ORE PROCESSED, CONCENTRATE or NM MINERAL
+      for mineral rows, COAL MINED or CLEAN COAL for coal rows.
+    tests:
+      - accepted_values: {values: [ORE MINED, ORE PROCESSED, CONCENTRATE, NM MINERAL, COAL MINED, CLEAN COAL]}
+  - name: ReportingPeriod
+    data_type: string
+    description: Period in which the stream occurred; relates to the year in which the period ends.
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    description: Mass of the stream, in tonnes.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    description: Mass of output material sold, in tonnes.
+  - name: ReportingYear
+    data_type: int
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

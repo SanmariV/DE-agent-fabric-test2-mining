@@ -1,0 +1,321 @@
+source: dbo
+description: >
+  Open Database of Mine Production: one-off CSV load of the 12 tables
+  (facilities, production, processing, ownership and reference data) from
+  the published open database. The tables are static (loaded once, never
+  refreshed) and have no load timestamp column, so no freshness rule is set.
+tables:
+- name: capacity
+  description: One row per facility, material and year with the stated output or input capacity.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: material
+    data_type: varchar(8000)
+  - name: commodity
+    data_type: varchar(8000)
+  - name: value_tpa
+    data_type: float
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: coal
+  description: One row per facility, year and coal stream type (coal mined, clean coal).
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: type
+    data_type: varchar(8000)
+  - name: material
+    data_type: varchar(8000)
+  - name: value_tonnes
+    data_type: int
+  - name: amount_sold_tonnes
+    data_type: int
+  - name: reporting_period
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: commodities
+  description: One row per commodity contained in a mineral stream of a facility and year.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: material
+    data_type: varchar(8000)
+  - name: commodity
+    data_type: varchar(8000)
+  - name: value_tonnes
+    data_type: float
+  - name: grade_ppm
+    data_type: float
+  - name: recovery_rate
+    data_type: float
+  - name: yield_ppm
+    data_type: float
+  - name: amount_sold_tonnes
+    data_type: float
+  - name: metal_payable_tonnes
+    data_type: float
+  - name: mine_processing
+    data_type: varchar(8000)
+  - name: reporting_period
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+  - name: id_minerals
+    data_type: int
+- name: facilities
+  description: One row per mine, processing facility or sub-site.
+  columns:
+  - name: fid
+    data_type: int
+  - name: geom
+    data_type: varchar(8000)
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: facility_name
+    data_type: varchar(8000)
+  - name: facility_other_names
+    data_type: varchar(8000)
+  - name: sub_site_name
+    data_type: varchar(8000)
+  - name: sub_site_other_names
+    data_type: varchar(8000)
+  - name: facility_type
+    data_type: varchar(8000)
+  - name: primary_commodity
+    data_type: varchar(8000)
+  - name: commodities_products
+    data_type: varchar(8000)
+  - name: facility_equipment
+    data_type: varchar(8000)
+  - name: production_start
+    data_type: float
+  - name: production_end
+    data_type: float
+  - name: activity_status
+    data_type: varchar(8000)
+  - name: activity_status_year
+    data_type: float
+  - name: surface_area_sq_km
+    data_type: float
+  - name: concession_area_sq_km
+    data_type: float
+  - name: country
+    data_type: varchar(8000)
+  - name: gid_0
+    data_type: varchar(8000)
+  - name: gid_1
+    data_type: varchar(8000)
+  - name: gid_2
+    data_type: varchar(8000)
+  - name: gid_3
+    data_type: varchar(8000)
+  - name: gid_4
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: material_ids
+  description: One row per material with its category and aggregate bundle.
+  columns:
+  - name: material_id
+    data_type: varchar(8000)
+  - name: material_name
+    data_type: varchar(8000)
+  - name: material_category
+    data_type: varchar(8000)
+  - name: material_category_2
+    data_type: varchar(8000)
+  - name: material_id_agg
+    data_type: varchar(8000)
+  - name: material_name_agg
+    data_type: varchar(8000)
+  - name: materials_contained
+    data_type: varchar(8000)
+- name: minerals
+  description: One row per facility, year, material and stream type (ore mined, ore processed, concentrate, NM mineral).
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: type
+    data_type: varchar(8000)
+  - name: material
+    data_type: varchar(8000)
+  - name: value_tonnes
+    data_type: int
+  - name: overall_grade_ppm
+    data_type: float
+  - name: amount_sold_tonnes
+    data_type: int
+  - name: mine_processing
+    data_type: varchar(8000)
+  - name: reporting_period
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: ownership
+  description: One row per facility and year with the owners and operators.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: owners
+    data_type: varchar(8000)
+  - name: operators
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: processing
+  description: One row per facility, year, input material and output material of a processing step.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: facility_type
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: input
+    data_type: varchar(8000)
+  - name: input_value_tonnes
+    data_type: float
+  - name: output
+    data_type: varchar(8000)
+  - name: output_value_tonnes
+    data_type: float
+  - name: grade_ppm
+    data_type: float
+  - name: recovery_rate
+    data_type: float
+  - name: amount_sold_tonnes
+    data_type: float
+  - name: metal_payable_tonnes
+    data_type: varchar(8000)
+  - name: incl_purchased
+    data_type: varchar(8000)
+  - name: reporting_period
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: reserves
+  description: One row per facility, year and material with the reported reserves.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: material
+    data_type: varchar(8000)
+  - name: commodity
+    data_type: varchar(8000)
+  - name: mineral_value_tonnes
+    data_type: float
+  - name: commodity_value_tonnes
+    data_type: float
+  - name: grade_ppm
+    data_type: float
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: source_ids
+  description: One row per source publication or website.
+  columns:
+  - name: source_id
+    data_type: varchar(8000)
+  - name: sources
+    data_type: varchar(8000)
+  - name: source_urls
+    data_type: varchar(8000)
+- name: transport
+  description: One row per facility, year and transported product.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: product
+    data_type: varchar(8000)
+  - name: value_tonnes
+    data_type: float
+  - name: transport_to
+    data_type: varchar(8000)
+  - name: transport_by
+    data_type: varchar(8000)
+  - name: export
+    data_type: varchar(8000)
+  - name: export_to
+    data_type: varchar(8000)
+  - name: reporting_period
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)
+- name: waste
+  description: One row per facility, year and waste stream.
+  columns:
+  - name: id
+    data_type: int
+  - name: facility_id
+    data_type: varchar(8000)
+  - name: year
+    data_type: int
+  - name: type_mining
+    data_type: varchar(8000)
+  - name: waste_type
+    data_type: varchar(8000)
+  - name: material
+    data_type: varchar(8000)
+  - name: commodity
+    data_type: varchar(8000)
+  - name: value_tonnes
+    data_type: float
+  - name: total_material_tonnes
+    data_type: float
+  - name: stripping_ratio
+    data_type: float
+  - name: reporting_period
+    data_type: varchar(8000)
+  - name: source_id
+    data_type: varchar(8000)
+  - name: comment
+    data_type: varchar(8000)

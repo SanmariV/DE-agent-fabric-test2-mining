@@ -1,0 +1,51 @@
+description: >
+  One row per facility, year and coal stream type (coal mined or clean coal).
+  Grain = CoalProduction_BK (source row id).
+source: {source: dbo, table: coal}
+load: {mode: full}
+columns:
+  - name: CoalProduction_BK
+    data_type: int
+    expression: cast(id as int)
+    business_key: true
+    description: Unique ID for each row, running integer.
+  - name: Facility_BK
+    data_type: string
+    expression: upper(trim(facility_id))
+    description: Facility the coal stream belongs to; key of Facility.
+  - name: Material_BK
+    data_type: string
+    expression: upper(trim(material))
+    description: Material of the coal stream; key of Material.
+  - name: DataSource_BK
+    data_type: string
+    expression: upper(trim(source_id))
+    description: Source of the record; key of DataSource.
+  - name: StreamType
+    data_type: string
+    expression: trim(type)
+    description: Type of coal material stream, for example Coal mined or Clean coal.
+  - name: ReportingPeriod
+    data_type: string
+    expression: coalesce(trim(reporting_period), 'January-December')
+    description: >
+      Period in which the stream occurred. Always relates to the year in which
+      the period ends. January-December when not specified in the source.
+  - name: Comment
+    data_type: string
+    expression: trim(comment)
+    description: Free-text comment.
+  - name: ValueTonnes
+    data_type: decimal(18,4)
+    expression: cast(value_tonnes as decimal(18,4))
+    description: Mass of the stream, in tonnes.
+  - name: AmountSoldTonnes
+    data_type: decimal(18,4)
+    expression: cast(amount_sold_tonnes as decimal(18,4))
+    description: Mass of output material sold, in tonnes.
+  - name: ReportingYear
+    data_type: int
+    expression: cast(year as int)
+    description: Year in which the reporting period ends.
+    tests:
+      - accepted_range: {min: 1990, max: 2030}

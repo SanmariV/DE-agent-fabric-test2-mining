@@ -1,0 +1,38 @@
+description: >
+  One row per material (mineral, commodity or other product) with its
+  categories and aggregate bundle. Grain = Material_BK. The source is a single
+  static snapshot, so attributes are overwritten, not versioned.
+scd_type: 1
+meta:
+  matrix:
+    business_question: What
+    scd_type: 1
+columns:
+  - name: Material_BK
+    data_type: varchar(20)
+    business_key: true
+    description: ID that uniquely identifies the material.
+  - name: MaterialName
+    data_type: varchar(150)
+    description: Name of the material.
+  - name: MaterialCategoryCode
+    data_type: varchar(20)
+    description: >
+      Category of the material: MINERAL, COMMODITY, OTHER_PRODUCT, FF_MINERAL,
+      FF_COMMODITY or AGGREGATE.
+    tests:
+      - accepted_values: {values: [MINERAL, COMMODITY, OTHER_PRODUCT, FF_MINERAL, FF_COMMODITY, AGGREGATE]}
+  - name: MaterialSecondaryCategory
+    data_type: varchar(80)
+    description: Secondary category of the material, more detailed than the material category.
+  - name: AggregateMaterial_BK
+    data_type: varchar(20)
+    description: ID that uniquely identifies the bundle of materials this material belongs to.
+  - name: AggregateMaterialName
+    data_type: varchar(80)
+    description: Name of the bundle of materials.
+  - name: MaterialsContained
+    data_type: varchar(400)
+    description: Materials contained in the bundle. Only applies when the category is aggregate.
+tests:
+  - row_count_between: {min: 1, severity: warn}
